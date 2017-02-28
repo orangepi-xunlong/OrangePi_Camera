@@ -222,7 +222,7 @@ unsigned char *RGB_2_BMP(unsigned char *yuv, unsigned int w, unsigned int h)
     return bmp24.buf;
 }
 
-int write_JPEG_file(char *filename, unsigned char*yuvData, 
+int write_JPEG_file(const char *filename, unsigned char*yuvData, 
 			int quality,int image_width,int image_height)
 {
 
