@@ -66,6 +66,7 @@ unmap:
 
     free(dev->buffers);
     close(dev->fd);
+    DEBUG_ORANGEPI("Close OrangePi Camera!\n");
 }
 
 /*
@@ -78,6 +79,7 @@ static int OrangePi_Camera_Capabilities(struct OrangePi_v4l2_device *dev)
     struct v4l2_format fmt;
     enum v4l2_buf_type type;
 
+    DEBUG_ORANGEPI("OrangePi_Camera_Capabilities\n");
     if(ioctl(dev->fd,VIDIOC_QUERYCAP,&cap) < 0) {
 	    DEBUG_ORANGEPI("ERROR:Can't get support information of camera\n");
 	return -1;
@@ -115,6 +117,7 @@ static void OrangePi_Current_Framer(struct OrangePi_v4l2_device *dev)
     struct v4l2_format fmt;
     struct v4l2_fmtdesc fmtdesc;
 
+    DEBUG_ORANGEPI("OrangePi_Current_Framer\n");
     memset(&fmt,0,sizeof(struct v4l2_format));
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     ioctl(dev->fd,VIDIOC_G_FMT,&fmt);
@@ -143,6 +146,7 @@ static void OrangePi_Current_Framer(struct OrangePi_v4l2_device *dev)
  */
 static int OrangePi_Format_Support(struct OrangePi_v4l2_device *dev)
 {
+    DEBUG_ORANGEPI("OrangePi_Format_Support\n");
     return 0;
 }
 
@@ -154,6 +158,7 @@ static int OrangePi_Set_input(struct OrangePi_v4l2_device *dev)
     struct v4l2_input input;
     int count = 0;
 
+    DEBUG_ORANGEPI("OrangePi_Set_input\n");
     memset(&input,0,sizeof(struct v4l2_input));
     input.index = count;
     
@@ -176,6 +181,7 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
     struct v4l2_format fmt;
     unsigned int min;
 
+    DEBUG_ORANGEPI("OrangePi_Set_Params\n");
     memset(&fmt,0,sizeof(struct v4l2_format));
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     fmt.fmt.pix.width  = dev->width * EX_TIME;
@@ -223,6 +229,7 @@ static int OrangePi_Set_Frame_Rate(struct OrangePi_v4l2_device *dev)
 {
     struct v4l2_streamparm setfps;
 
+    DEBUG_ORANGEPI("OrangePi_Set_Frame_Rate\n");
     memset(&setfps, 0 , sizeof(struct v4l2_streamparm));
     setfps.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     setfps.parm.capture.timeperframe.numerator = 1;
@@ -246,6 +253,7 @@ static int OrangePi_Set_Buffer(struct OrangePi_v4l2_device *dev)
     struct v4l2_requestbuffers req;
     int i;
 
+    OrangePi_Set_Buffer("OrangePi_Set_Buffer\n");
     memset(&req,0,sizeof(struct v4l2_requestbuffers));
     req.count  = dev->buffers->n_buffers;
     req.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -295,7 +303,8 @@ static int OrangePi_Prepare_Capture(struct OrangePi_v4l2_device *dev)
 {
     unsigned int i;
     enum v4l2_buf_type type;
-    
+   
+    DEBUG_ORANGEPI("OrangePi_Prepare_Capture\n"); 
     for(i = 0 ; i < dev->buffers->n_buffers ; i++) {
 	struct v4l2_buffer buf;
     
@@ -327,6 +336,7 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
     unsigned int i;
     struct v4l2_buffer buf;
     
+    DEBUG_ORANGEPI("OrangePi_Capture\n");
     memset(&tv , 0 , sizeof(struct timeval));
     FD_ZERO(&fds);
     FD_SET(dev->fd,&fds);
@@ -370,6 +380,7 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
  */
 static int OrangePi_init(struct OrangePi_v4l2_device *dev)
 {
+    DEBUG_ORANGEPI("OrangePi_init\n");
     dev->width   = CAPTURE_WIDTH;
     dev->height  = CAPTURE_HEIGHT;
     dev->format  = CAPTURE_FORMAT;
