@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     struct OrangePi_v4l2_device *dev;
 
     dev = OrangePi_device_init();
-    OrangePi_device_capture(dev);
+    OrangePi_device_captureOne(dev, "./Before.jpg");
     OrangePi_device_close(dev);
 
     DEBUG_ORANGEPI("OrangePi");

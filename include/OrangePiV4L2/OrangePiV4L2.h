@@ -63,6 +63,12 @@ struct OrangePi_v4l2_device *OrangePi_device_init(void);
 void OrangePi_device_close(struct OrangePi_v4l2_device *);
 
 /* Capture a picture */
-void OrangePi_device_capture(struct OrangePi_v4l2_device *dev);
+void OrangePi_device_capture(struct OrangePi_v4l2_device *);
+
+/* Cove YUYV 2 JPEG */
+void OrangePi_Process_Image(struct OrangePi_v4l2_device *, const char *);
+
+/* Capture one picture */
+void OrangePi_device_captureOne(struct OrangePi_v4l2_device *, const char *);
 
 #endif

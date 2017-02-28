@@ -26,3 +26,20 @@ void OrangePi_device_capture(struct OrangePi_v4l2_device *dev)
 {
     dev->capture(dev);    
 }
+
+/*
+ * Cover YUYV to JPEG
+ */
+void OrangePi_Process_Image(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
+{
+    write_JPEG_file(JPEG_PATH, dev->buffers->YUV_buffer, 100, dev->width, dev->height);
+}
+
+/* 
+ * Capture one picture
+ */
+void OrangePi_device_captureOne(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
+{
+    dev->capture(dev);
+    OrangePi_Process_Image(dev, JPEG_PATH);        
+}
