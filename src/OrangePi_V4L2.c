@@ -22,12 +22,12 @@
 //#define CAPTURE_FORMAT  V4L2_PIX_FMT_NV21
 //#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUV422P
 //#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUV420
-#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUV422P
-//#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUYV
+//#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUV422P
+#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUYV
 #define CAPTURE_FPS     15
 #define CAPTURE_BUFFERS 4
 #define CAPTURE_TIMEOUT 5
-#define EX_TIME         2
+#define EX_TIME         1
 
 /*
  * Open the device.
@@ -237,7 +237,7 @@ static int OrangePi_Set_Frame_Rate(struct OrangePi_v4l2_device *dev)
     setfps.parm.capture.timeperframe.numerator = 1;
     setfps.parm.capture.timeperframe.denominator = dev->fps;
 
-    if(ioctl(dev->fd, VIDIOC_S_PARM , &setfps)) {
+    if(ioctl(dev->fd, VIDIOC_S_PARM , &setfps) < 0) {
 	    DEBUG_ORANGEPI("ERROR: Bad Setting fram rate.\n");
 	    return -1;
     }
