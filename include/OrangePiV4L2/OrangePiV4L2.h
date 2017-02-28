@@ -42,6 +42,18 @@ struct OrangePi_v4l2_device {
     void (*current_framer)(struct OrangePi_v4l2_device *dev);
 };
 
+/*
+ * Debug system
+ */
+#define DEBUG_INFO 1
+
+#if (DEBUG_INFO == 1)
+#define DEBUG_ORANGEPI(...) printf("[OrangePi][%s %d]"" %s", \
+         __func__, __LINE__, __VA_ARGS__)
+#else
+#define DEBUG_ORANGEPI(...) 
+#endif
+
 /* OrangePi Device */
 extern struct OrangePi_v4l2_device OrangePi;
 
@@ -51,7 +63,7 @@ struct OrangePi_v4l2_device *OrangePi_device_init(void);
 /* Close a OrangePi Camera device */
 void OrangePi_device_close(struct OrangePi_v4l2_device *);
 
-int add(int, int);
-int sub(int, int);
+/* Capture a picture */
+void OrangePi_device_capture(struct OrangePi_v4l2_device *dev);
 
 #endif

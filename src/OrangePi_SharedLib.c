@@ -19,7 +19,10 @@ void OrangePi_device_close(struct OrangePi_v4l2_device *dev)
     dev->close(dev);    
 }
 
-int add(int a, int b)
+/*
+ * Capture a picture
+ */
+void OrangePi_device_capture(struct OrangePi_v4l2_device *dev)
 {
-    return a + b;    
+    dev->capture(dev);    
 }
