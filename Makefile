@@ -20,7 +20,7 @@ all: $(SharedLibrary) install $(TARGET)
 $(TARGET): $(OBJS)
 	$(V)$(CC) $< -lOrangePi_SharedLib -o $@
 
-$(SharedLibrary): OrangePi_SharedLib.c OrangePi_V4L2.c
+$(SharedLibrary): OrangePi_SharedLib.c OrangePi_V4L2.c OrangePi_ImageLibrary.c
 	$(V)$(CC) $(FLAGS) $^ -shared -fPIC -o $@
 	$(V)mv $@ lib/
 
