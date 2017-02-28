@@ -48,10 +48,9 @@ struct OrangePi_v4l2_device {
 #define DEBUG_INFO 1
 
 #if (DEBUG_INFO == 1)
-#define DEBUG_ORANGEPI(...) printf("[OrangePi][%s %d]"" %s", \
-         __func__, __LINE__, __VA_ARGS__)
+#define DEBUG_ORANGEPI printf
 #else
-#define DEBUG_ORANGEPI(...) 
+#define DEBUG_ORANGEPI printf
 #endif
 
 /* OrangePi Device */
