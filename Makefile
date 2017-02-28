@@ -6,7 +6,7 @@
 # gc2035
 
 CC=gcc
-FLAGS= -I./include
+FLAGS= -I./include -ljpeg
 TARGET= OrangePi_Capture
 
 VPATH := src
@@ -18,10 +18,11 @@ OBJS= main.o
 all: $(SharedLibrary) install $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(V)$(CC) $< -lOrangePi_SharedLib -o $@
+	$(V)$(CC) $< -ljpeg -lOrangePi_SharedLib -o $@
+	$(V)rm *.o
 
 $(SharedLibrary): OrangePi_SharedLib.c OrangePi_V4L2.c OrangePi_ImageLibrary.c
-	$(V)$(CC) $(FLAGS) $^ -shared -fPIC -o $@
+	$(V)$(CC) $^ $(FLAGS)  -shared -fPIC -o $@
 	$(V)mv $@ lib/
 
 

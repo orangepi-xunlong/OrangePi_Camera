@@ -3,7 +3,7 @@ OrangePi Camera
 
 * Prepare toolchain
 ```
-sudo apt-get install git make gcc
+sudo apt-get install git make gcc libjpeg8-dev
 ```
 
 * Doownload Source Code
