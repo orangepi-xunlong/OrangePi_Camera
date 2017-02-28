@@ -253,7 +253,7 @@ static int OrangePi_Set_Buffer(struct OrangePi_v4l2_device *dev)
     struct v4l2_requestbuffers req;
     int i;
 
-    OrangePi_Set_Buffer("OrangePi_Set_Buffer\n");
+    DEBUG_ORANGEPI("OrangePi_Set_Buffer\n");
     memset(&req,0,sizeof(struct v4l2_requestbuffers));
     req.count  = dev->buffers->n_buffers;
     req.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
