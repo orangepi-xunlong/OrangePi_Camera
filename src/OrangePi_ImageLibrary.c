@@ -243,7 +243,7 @@ int write_JPEG_file(char *filename, unsigned char*yuvData,
     jpeg_create_compress(&cinfo);
     if ((outfile = fopen(filename, "wb")) == NULL) {
         fprintf(stderr, "can't open %s\n", filename);
-        return;
+        return -1;
     }
 
     jpeg_stdio_dest(&cinfo, outfile);
