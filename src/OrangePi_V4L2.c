@@ -13,7 +13,7 @@
 
 #include <OrangePiV4L2/OrangePiV4L2.h>
 
-#define DEBUG  0
+#define DEBUG  1
 
 #define DEVICE_NAME "/dev/video0"
 #define CAPTURE_WIDTH   (640)
@@ -237,7 +237,7 @@ static int OrangePi_Set_Frame_Rate(struct OrangePi_v4l2_device *dev)
 
     if(ioctl(dev->fd, VIDIOC_S_PARM , &setfps) < 0) {
 	    DEBUG_ORANGEPI("ERROR: Bad Setting fram rate.\n");
-	//    return -1;
+	    return -1;
     }
     dev->fps = setfps.parm.capture.timeperframe.denominator;
     DEBUG_ORANGEPI("Support fps:%d\n",dev->fps);
