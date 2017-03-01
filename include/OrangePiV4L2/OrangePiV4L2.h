@@ -52,18 +52,8 @@ struct OrangePi_v4l2_configure {
     int Capture_FPS;  
     int Buffer_Number;
     int Capture_Timeout;
+    int DEBUG;
 };
-
-/*
- * Debug system
- */
-#define DEBUG_INFO 1
-
-#if (DEBUG_INFO == 1)
-#define DEBUG_ORANGEPI printf
-#else
-#define DEBUG_ORANGEPI printf
-#endif
 
 /* OrangePi Device */
 extern struct OrangePi_v4l2_device OrangePi;

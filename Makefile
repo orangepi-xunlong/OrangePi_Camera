@@ -15,6 +15,8 @@ V=
 
 SharedLibrary= libOrangePi_SharedLib.so
 OBJS= main.o
+SharedFile= src/OrangePi_Configure.c OrangePi_SharedLib.c OrangePi_V4L2.c \
+    OrangePi_ImageLibrary.c OrangePi_Debug.c
 
 all: $(SharedLibrary) install $(TARGET)
 
@@ -22,7 +24,7 @@ $(TARGET): $(OBJS)
 	$(V)$(CC) $< -ljpeg -lOrangePi_SharedLib -o $@
 	$(V)rm *.o
 
-$(SharedLibrary): src/OrangePi_Configure.c OrangePi_SharedLib.c OrangePi_V4L2.c OrangePi_ImageLibrary.c
+$(SharedLibrary): $(SharedFile)
 	$(V)$(CC) $^ $(FLAGS)  -shared -fPIC -o $@
 	$(V)mv $@ lib/
 

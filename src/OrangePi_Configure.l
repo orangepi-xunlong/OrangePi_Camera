@@ -2,6 +2,7 @@
 
 %{
 #include <OrangePiV4L2/OrangePi_Config.h>
+#include <OrangePiV4L2/OrangePi_Debug.h>
 #include <OrangePiV4L2/OrangePiV4L2.h>
 #include <malloc.h>
 #include <string.h>
@@ -31,6 +32,7 @@ static void OrangePi_Set_Capture_FPS(char *);
 static void OrangePi_Set_Buffer_Number(char *);
 static void OrangePi_Set_Capture_Timeout(char *);
 static void OrangePi_Set_Platform(const char *);
+static void OrangePi_Set_DEBUG(const char *);
 
 %}
 
@@ -45,6 +47,7 @@ Capture_Width.*\n      { OrangePi_Set_Capture_width(yytext); }
 Capture_Height.*\n     { OrangePi_Set_Capture_Height(yytext); }
 Capture_Timeout.*\n    { OrangePi_Set_Capture_Timeout(yytext); }
 Buffer_Number.*\n      { OrangePi_Set_Buffer_Number(yytext); }
+DEBUG.*\n              { OrangePi_Set_DEBUG(yytext); }
 .			           { /* Ignore other */ }
 
 %%
@@ -58,6 +61,7 @@ static void str2int(const char *str, int *value, int n)
     for(i = 0; i < n; i++) 
         *value += (str[i] - '0') * Calc_Table[n - i - 1];  
 }
+
 /*
  * Set Platform
  */
@@ -207,7 +211,6 @@ static void OrangePi_Set_Capture_Format(char *name)
         OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_HM12;
     if (strcmp(tmp1, "V4L2_PIX_FMT_M420") == 0)
         OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_M420;
-    printf("tmp1 %s Value %d\n", tmp1, OrangePi_Camera_Config.Capture_Format);
 }
 
 /*
@@ -221,6 +224,20 @@ static void OrangePi_Set_Capture_FPS(char *name)
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
     str2int(tmp, &OrangePi_Camera_Config.Capture_FPS, len - 1);
+}
+
+/*
+ * Set Debug level
+ */
+static void OrangePi_Set_DEBUG(const char *name)
+{
+    char *tmp;
+
+    tmp = strstr(name, "=") + 1;
+    if (strncmp(tmp, "ON", 2) == 0)
+        OrangePi_Camera_Config.DEBUG = 1;
+    else
+        OrangePi_Camera_Config.DEBUG = 0;
 }
 
 /*
@@ -293,6 +310,14 @@ int OrangePi_Get_Capture_Timeout(void)
 int OrangePi_Get_Buffer_Number(void)
 {
     return OrangePi_Camera_Config.Buffer_Number;    
+}
+
+/*
+ * Export: Get Debug level
+ */
+int OrangePi_Get_DEBUG(void)
+{
+    return OrangePi_Camera_Config.DEBUG;    
 }
 
 /*
