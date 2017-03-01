@@ -396,7 +396,7 @@ static int OrangePi_init(struct OrangePi_v4l2_device *dev)
     OrangePi_Camera_Capabilities(dev);
     OrangePi_Set_input(dev);
     OrangePi_Set_Params(dev);
-    OrangePi_Set_Frame_Rate(dev);
+//    OrangePi_Set_Frame_Rate(dev);
     OrangePi_Current_Framer(dev);
     OrangePi_Set_Buffer(dev);
     OrangePi_Prepare_Capture(dev);
