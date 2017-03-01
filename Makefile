@@ -4,6 +4,7 @@
 #
 # Camera list:
 # gc2035
+# gc0309
 
 CC=gcc
 FLAGS= -I./include -ljpeg

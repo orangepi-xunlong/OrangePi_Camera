@@ -371,8 +371,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 11
-#define YY_END_OF_BUFFER 12
+#define YY_NUM_RULES 12
+#define YY_END_OF_BUFFER 13
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -380,19 +380,20 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[96] =
+static yyconst flex_int16_t yy_accept[106] =
     {   0,
-        0,    0,   12,   10,   10,   11,   10,   10,   10,   10,
-        0,    0,    0,    1,    0,    0,    0,    0,    0,    0,
+        0,    0,   13,   11,   11,   12,   11,   11,   11,   11,
+       11,    0,    0,    0,    1,    0,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    2,    0,    0,
         0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-        0,    0,    0,    0,    0,    0,    2,    0,    5,    0,
-        0,    0,    0,    0,    3,    0,    0,    0,    0,    0,
-        0,    9,    0,    0,    0,    0,    6,    0,    4,    0,
-        7,    0,    0,    8,    0
+        0,    0,    0,    0,    0,    0,    3,    0,    6,    0,
+        0,    0,    0,    0,    4,    0,    0,    0,    0,    0,
+        0,   10,    0,    0,    0,    0,    7,    0,    5,    0,
 
+        8,    0,    0,    9,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -408,8 +409,8 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,   12,   13,    1,    1,   14,    1,    1,    1,
         1,    1,    1,    1,   15,    1,   16,   17,   18,   19,
 
-       20,   21,   22,   23,   24,    1,    1,    1,   25,    1,
-       26,   27,    1,   28,    1,   29,   30,   31,    1,    1,
+       20,   21,   22,   23,   24,    1,    1,   25,   26,    1,
+       27,   28,    1,   29,    1,   30,   31,   32,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -427,84 +428,88 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int32_t yy_meta[32] =
+static yyconst flex_int32_t yy_meta[33] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1
+        1,    1
     } ;
 
-static yyconst flex_int16_t yy_base[106] =
+static yyconst flex_int16_t yy_base[117] =
     {   0,
-        0,    6,  110,  111,   12,  111,  106,   78,   91,   86,
-       13,  102,  101,  111,   82,    0,   71,   80,   80,   70,
-       74,   77,   68,   65,   76,   65,   76,   63,   70,   74,
-       73,   67,   71,   75,   74,   68,   72,   51,   64,   10,
-       63,   53,   52,    9,   56,   51,   50,   48,   55,   51,
-       58,   41,   44,   42,   47,   45,   44,   60,   59,   36,
-       38,   39,   29,   54,   28,   52,  111,   51,  111,   37,
-       29,   25,   27,   46,  111,   45,   18,   17,   15,   41,
-       40,  111,   39,   38,   11,   36,  111,   35,  111,   34,
-      111,   33,   31,  111,  111,   32,   31,   30,   29,   28,
+        0,   10,  122,  123,    6,  123,  118,   89,  103,   98,
+       92,   16,  113,  112,  123,   93,    0,   81,   96,   90,
+       90,   79,   84,   77,   86,   76,   73,   85,   81,   72,
+       84,   70,   78,   70,   81,   80,   74,   78,   63,   81,
+       80,   74,   78,   61,   55,   69,   16,   68,   80,   56,
+       55,    8,   60,   55,   54,   51,   73,  123,   58,   54,
+       61,   43,   47,   44,   50,   48,   47,   63,   62,   38,
+       41,   42,   31,   57,   30,   55,  123,   54,  123,   40,
+       32,   27,   30,   49,  123,   48,   20,   19,   17,   44,
+       43,  123,   42,   41,   13,   39,  123,   38,  123,   37,
 
-       27,   25,   21,   20,    0
+      123,   36,   35,  123,  123,   36,   35,   33,   32,   31,
+       30,   26,   22,   21,    8,    0
     } ;
 
-static yyconst flex_int16_t yy_def[106] =
+static yyconst flex_int16_t yy_def[117] =
     {   0,
-       96,   96,   95,   95,   95,   95,   97,   95,   95,   95,
-       95,   97,   97,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   98,   99,   95,
-       95,   95,   95,  100,   95,   98,   95,   99,   95,   95,
-       95,   95,   95,  100,   95,  101,   95,   95,   95,  102,
-      101,   95,  103,  104,   95,  102,   95,  103,   95,  104,
-       95,  105,  105,   95,    0,   95,   95,   95,   95,   95,
+      106,  106,  105,  105,  105,  105,  107,  105,  105,  105,
+      105,  105,  107,  107,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  105,  108,  105,
+      105,  105,  105,  105,  105,  105,  108,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  109,  110,  105,
+      105,  105,  105,  111,  105,  109,  105,  110,  105,  105,
+      105,  105,  105,  111,  105,  112,  105,  105,  105,  113,
+      112,  105,  114,  115,  105,  113,  105,  114,  105,  115,
 
-       95,   95,   95,   95,   95
+      105,  116,  116,  105,    0,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105
     } ;
 
-static yyconst flex_int16_t yy_nxt[143] =
+static yyconst flex_int16_t yy_nxt[156] =
     {   0,
-       93,    5,    6,    7,    8,    9,   10,    5,    6,    7,
-        8,    9,   10,   11,   11,   12,   12,   44,   45,   51,
-       90,   88,   46,   47,   19,   86,   20,   81,   74,   68,
-       66,   13,    4,   94,   52,   94,   91,   89,   87,   92,
-       91,   89,   82,   87,   85,   84,   83,   82,   75,   80,
-       79,   78,   77,   69,   67,   76,   75,   73,   72,   71,
-       70,   69,   67,   65,   64,   63,   62,   61,   60,   59,
-       58,   57,   56,   55,   54,   53,   50,   49,   48,   43,
-       42,   41,   40,   39,   38,   37,   36,   35,   34,   33,
-       32,   31,   30,   29,   28,   27,   26,   25,   24,   23,
+      103,    5,    6,    7,    8,    9,   10,   12,  100,   13,
+       11,    5,    6,    7,    8,    9,   10,   12,   61,   13,
+       11,   98,   96,   52,   53,   21,   91,   22,   54,   55,
+       84,   78,   76,   57,   62,   14,    4,  104,  104,  101,
+       99,   97,  102,  101,   99,   92,   97,   95,   94,   93,
+       92,   85,   90,   89,   88,   87,   79,   77,   86,   85,
+       83,   82,   81,   80,   79,   77,   75,   74,   73,   72,
+       71,   70,   69,   68,   67,   58,   66,   65,   64,   63,
+       60,   59,   58,   56,   51,   50,   49,   48,   47,   46,
+       45,   44,   43,   42,   41,   40,   39,   38,   37,   36,
 
-       22,   21,   18,   14,   14,   17,   16,   15,   14,   95,
-        3,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95
+       35,   34,   33,   32,   31,   30,   29,   28,   27,   26,
+       25,   24,   23,   20,   15,   15,   19,   18,   17,   16,
+       15,  105,    3,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105
     } ;
 
-static yyconst flex_int16_t yy_chk[143] =
+static yyconst flex_int16_t yy_chk[156] =
     {   0,
-      105,    1,    1,    1,    1,    1,    1,    2,    2,    2,
-        2,    2,    2,    5,   11,    5,   11,   40,   40,   44,
-      104,  103,   40,   40,   16,  102,   16,  101,  100,   99,
-       98,   97,   96,   93,   44,   92,   90,   88,   86,   85,
-       84,   83,   81,   80,   79,   78,   77,   76,   74,   73,
-       72,   71,   70,   68,   66,   65,   64,   63,   62,   61,
-       60,   59,   58,   57,   56,   55,   54,   53,   52,   51,
-       50,   49,   48,   47,   46,   45,   43,   42,   41,   39,
-       38,   37,   36,   35,   34,   33,   32,   31,   30,   29,
-       28,   27,   26,   25,   24,   23,   22,   21,   20,   19,
+      116,    1,    1,    1,    1,    1,    1,    5,  115,    5,
+        1,    2,    2,    2,    2,    2,    2,   12,   52,   12,
+        2,  114,  113,   47,   47,   17,  112,   17,   47,   47,
+      111,  110,  109,  108,   52,  107,  106,  103,  102,  100,
+       98,   96,   95,   94,   93,   91,   90,   89,   88,   87,
+       86,   84,   83,   82,   81,   80,   78,   76,   75,   74,
+       73,   72,   71,   70,   69,   68,   67,   66,   65,   64,
+       63,   62,   61,   60,   59,   57,   56,   55,   54,   53,
+       51,   50,   49,   48,   46,   45,   44,   43,   42,   41,
+       40,   39,   38,   37,   36,   35,   34,   33,   32,   31,
 
-       18,   17,   15,   13,   12,   10,    9,    8,    7,    3,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95,   95,   95,   95,   95,   95,   95,   95,   95,
-       95,   95
+       30,   29,   28,   27,   26,   25,   24,   23,   22,   21,
+       20,   19,   18,   16,   14,   13,   11,   10,    9,    8,
+        7,    3,  105,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105,  105,  105,  105,  105,  105,
+      105,  105,  105,  105,  105
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -552,8 +557,9 @@ static void OrangePi_Set_Capture_Format(char *);
 static void OrangePi_Set_Capture_FPS(char *);
 static void OrangePi_Set_Buffer_Number(char *);
 static void OrangePi_Set_Capture_Timeout(char *);
+static void OrangePi_Set_Platform(const char *);
 
-#line 557 "<stdout>"
+#line 563 "<stdout>"
 
 #define INITIAL 0
 
@@ -740,9 +746,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 36 "src/OrangePi_Configure.l"
+#line 37 "src/OrangePi_Configure.l"
 
-#line 746 "<stdout>"
+#line 752 "<stdout>"
 
 	if ( !(yy_init) )
 		{
@@ -795,13 +801,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 96 )
+				if ( yy_current_state >= 106 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 111 );
+		while ( yy_base[yy_current_state] != 123 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -828,68 +834,74 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 37 "src/OrangePi_Configure.l"
+#line 38 "src/OrangePi_Configure.l"
 { /* Comment */ }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 38 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Camera_Name(yytext); }
+#line 39 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Platform(yytext); }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 39 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Device_Name(yytext); }
+#line 40 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Camera_Name(yytext); }
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 40 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Capture_Format(yytext); }
+#line 41 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Device_Name(yytext); }
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 41 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Capture_FPS(yytext); }
+#line 42 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Capture_Format(yytext); }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 42 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Capture_width(yytext); }
+#line 43 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Capture_FPS(yytext); }
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 43 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Capture_Height(yytext); }
+#line 44 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Capture_width(yytext); }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 44 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Capture_Timeout(yytext); }
+#line 45 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Capture_Height(yytext); }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 45 "src/OrangePi_Configure.l"
-{ OrangePi_Set_Buffer_Number(yytext); }
+#line 46 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Capture_Timeout(yytext); }
 	YY_BREAK
 case 10:
+/* rule 10 can match eol */
 YY_RULE_SETUP
-#line 46 "src/OrangePi_Configure.l"
-{ /* Ignore other */ }
+#line 47 "src/OrangePi_Configure.l"
+{ OrangePi_Set_Buffer_Number(yytext); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 48 "src/OrangePi_Configure.l"
+{ /* Ignore other */ }
+	YY_BREAK
+case 12:
+YY_RULE_SETUP
+#line 50 "src/OrangePi_Configure.l"
 ECHO;
 	YY_BREAK
-#line 893 "<stdout>"
+#line 905 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1181,7 +1193,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 96 )
+			if ( yy_current_state >= 106 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1209,11 +1221,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 96 )
+		if ( yy_current_state >= 106 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 95);
+	yy_is_jam = (yy_current_state == 105);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1887,7 +1899,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 48 "src/OrangePi_Configure.l"
+#line 50 "src/OrangePi_Configure.l"
 
 
 
@@ -1900,6 +1912,21 @@ static void str2int(const char *str, int *value, int n)
     for(i = 0; i < n; i++) 
         *value += (str[i] - '0') * Calc_Table[n - i - 1];  
 }
+/*
+ * Set Platform
+ */
+static void OrangePi_Set_Platform(const char *name)
+{
+    char *tmp;
+    int len;
+
+    tmp = strstr(name, "=") + 1;
+    len = strlen(tmp);
+    OrangePi_Camera_Config.Platform = (char *)malloc(len);
+    strncpy(OrangePi_Camera_Config.Platform, tmp, len);
+    OrangePi_Camera_Config.Platform[len - 1] = '\0';
+}
+
 /*
  * Set Camera Name
  */
@@ -2051,6 +2078,14 @@ static void OrangePi_Set_Capture_FPS(char *name)
 }
 
 /*
+ * Export: Get Platform
+ */
+char *OrangePi_Get_Platform(void)
+{
+    return OrangePi_Camera_Config.Platform;    
+}
+
+/*
  * Export: Get Camera Name
  */
 char *OrangePi_Get_Camera_Name(void)
@@ -2120,6 +2155,7 @@ int OrangePi_Get_Buffer_Number(void)
 void OrangePi_Show_Current_Camera_Configure(void)
 {
     DEBUG_ORANGEPI("===== Camera Configure =====\n");
+    DEBUG_ORANGEPI("Platform:\t\t%s\n", OrangePi_Get_Platform());    
     DEBUG_ORANGEPI("Camera Name:\t\t%s\n", OrangePi_Get_Camera_Name());    
     DEBUG_ORANGEPI("Device Name:\t\t%s\n", OrangePi_Get_Device_Name());    
     DEBUG_ORANGEPI("Capture Width:\t\t%d\n", OrangePi_Get_Capture_Width());    

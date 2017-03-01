@@ -30,11 +30,13 @@ static void OrangePi_Set_Capture_Format(char *);
 static void OrangePi_Set_Capture_FPS(char *);
 static void OrangePi_Set_Buffer_Number(char *);
 static void OrangePi_Set_Capture_Timeout(char *);
+static void OrangePi_Set_Platform(const char *);
 
 %}
 
 %%
 [ \t]*#.*\n            { /* Comment */ }
+Platform.*\n           { OrangePi_Set_Platform(yytext); }
 Camera_Name.*\n        { OrangePi_Set_Camera_Name(yytext); }
 Device_Name.*\n        { OrangePi_Set_Device_Name(yytext); }
 Capture_Format.*\n     { OrangePi_Set_Capture_Format(yytext); }
@@ -56,6 +58,21 @@ static void str2int(const char *str, int *value, int n)
     for(i = 0; i < n; i++) 
         *value += (str[i] - '0') * Calc_Table[n - i - 1];  
 }
+/*
+ * Set Platform
+ */
+static void OrangePi_Set_Platform(const char *name)
+{
+    char *tmp;
+    int len;
+
+    tmp = strstr(name, "=") + 1;
+    len = strlen(tmp);
+    OrangePi_Camera_Config.Platform = (char *)malloc(len);
+    strncpy(OrangePi_Camera_Config.Platform, tmp, len);
+    OrangePi_Camera_Config.Platform[len - 1] = '\0';
+}
+
 /*
  * Set Camera Name
  */
@@ -207,6 +224,14 @@ static void OrangePi_Set_Capture_FPS(char *name)
 }
 
 /*
+ * Export: Get Platform
+ */
+char *OrangePi_Get_Platform(void)
+{
+    return OrangePi_Camera_Config.Platform;    
+}
+
+/*
  * Export: Get Camera Name
  */
 char *OrangePi_Get_Camera_Name(void)
@@ -276,6 +301,7 @@ int OrangePi_Get_Buffer_Number(void)
 void OrangePi_Show_Current_Camera_Configure(void)
 {
     DEBUG_ORANGEPI("===== Camera Configure =====\n");
+    DEBUG_ORANGEPI("Platform:\t\t%s\n", OrangePi_Get_Platform());    
     DEBUG_ORANGEPI("Camera Name:\t\t%s\n", OrangePi_Get_Camera_Name());    
     DEBUG_ORANGEPI("Device Name:\t\t%s\n", OrangePi_Get_Device_Name());    
     DEBUG_ORANGEPI("Capture Width:\t\t%d\n", OrangePi_Get_Capture_Width());    

@@ -15,5 +15,6 @@ int OrangePi_Get_Capture_Format(void);
 int OrangePi_Get_Capture_FPS(void);
 int OrangePi_Get_Buffer_Number(void);
 int OrangePi_Get_Capture_Timeout(void);
+char *OrangePi_Get_Platform(void);
 
 #endif

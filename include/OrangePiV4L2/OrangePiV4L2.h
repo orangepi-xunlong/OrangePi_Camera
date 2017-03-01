@@ -43,6 +43,7 @@ struct OrangePi_v4l2_device {
 };
 
 struct OrangePi_v4l2_configure {
+    char *Platform;
     char *Camera_name;
     char *Device_name;
     int Capture_width;
