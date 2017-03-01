@@ -165,7 +165,7 @@ static int OrangePi_Set_input(struct OrangePi_v4l2_device *dev)
     input.index = count;
     
     while(!ioctl(dev->fd, VIDIOC_ENUMINPUT , &input))
-	input.index = ++count;
+    	input.index = ++count;
     count -= 1;
 
     if(ioctl(dev->fd , VIDIOC_S_INPUT , &count) == -1) {
@@ -203,7 +203,6 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
 	return -1;
     }
 
-#if 0
     DEBUG_ORANGEPI("Select Camera Mode:\n"
 	    "Width:  %d\n"
 	    "Height: %d\n"
@@ -212,7 +211,6 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
 	    fmt.fmt.pix.height,
 	    (char *)&fmt.fmt.pix.pixelformat);
 
-#endif
     dev->width  = fmt.fmt.pix.width;
     dev->height = fmt.fmt.pix.height;
 
@@ -239,7 +237,7 @@ static int OrangePi_Set_Frame_Rate(struct OrangePi_v4l2_device *dev)
 
     if(ioctl(dev->fd, VIDIOC_S_PARM , &setfps) < 0) {
 	    DEBUG_ORANGEPI("ERROR: Bad Setting fram rate.\n");
-	    return -1;
+	//    return -1;
     }
     dev->fps = setfps.parm.capture.timeperframe.denominator;
     DEBUG_ORANGEPI("Support fps:%d\n",dev->fps);
