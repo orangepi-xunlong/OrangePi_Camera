@@ -42,6 +42,17 @@ struct OrangePi_v4l2_device {
     void (*current_framer)(struct OrangePi_v4l2_device *dev);
 };
 
+struct OrangePi_v4l2_configure {
+    char *Camera_name;
+    char *Device_name;
+    int Capture_width;
+    int Capture_Height;
+    int Capture_Format;
+    int Capture_FPS;  
+    int Buffer_Number;
+    int Capture_Timeout;
+};
+
 /*
  * Debug system
  */

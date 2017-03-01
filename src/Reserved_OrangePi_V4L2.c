@@ -14,7 +14,21 @@
 #include <OrangePiV4L2/OrangePiV4L2.h>
 #include <OrangePiV4L2/OrangePi_Config.h>
 
-#define DEBUG  0
+#define DEBUG  1
+
+#define DEVICE_NAME "/dev/video0"
+#define CAPTURE_WIDTH   (640)
+#define CAPTURE_HEIGHT  (480)
+//#define CAPTURE_FORMAT  V4L2_PIX_FMT_JPEG
+//#define CAPTURE_FORMAT  V4L2_PIX_FMT_NV21
+//#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUV422P
+//#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUV420
+//#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUV422P
+#define CAPTURE_FORMAT  V4L2_PIX_FMT_YUYV
+#define CAPTURE_FPS     15
+#define CAPTURE_BUFFERS 4
+#define CAPTURE_TIMEOUT 5
+#define EX_TIME         1
 
 /*
  * Open the device.
@@ -173,8 +187,8 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
     DEBUG_ORANGEPI("OrangePi_Set_Params\n");
     memset(&fmt,0,sizeof(struct v4l2_format));
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    fmt.fmt.pix.width  = dev->width;
-    fmt.fmt.pix.height = dev->height;
+    fmt.fmt.pix.width  = dev->width * EX_TIME;
+    fmt.fmt.pix.height = dev->height * EX_TIME;
     fmt.fmt.pix.field  = V4L2_FIELD_ANY;
     fmt.fmt.pix.pixelformat = dev->format;
     fmt.fmt.pix.sizeimage   = dev->width * dev->height * 3 / 2;
@@ -368,23 +382,22 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
 static int OrangePi_init(struct OrangePi_v4l2_device *dev)
 {
     DEBUG_ORANGEPI("OrangePi_init\n");
-    dev->width   = OrangePi_Get_Capture_Width();
-    dev->height  = OrangePi_Get_Capture_Height();
-    dev->format  = OrangePi_Get_Capture_Format();
-    dev->fps     = OrangePi_Get_Capture_FPS();
-    dev->timeout = OrangePi_Get_Capture_Timeout();
-    dev->device_name = OrangePi_Get_Device_Name();
+    dev->width   = CAPTURE_WIDTH;
+    dev->height  = CAPTURE_HEIGHT;
+    dev->format  = CAPTURE_FORMAT;
+    dev->fps     = CAPTURE_FPS;
+    dev->timeout = CAPTURE_TIMEOUT;
 
     dev->buffers = (struct OrangePi_buffer *)malloc(
 		    sizeof(struct OrangePi_buffer));
     
-    dev->buffers->n_buffers = OrangePi_Get_Buffer_Number();
+    dev->buffers->n_buffers = CAPTURE_BUFFERS;
 
     OrangePi_open(dev);
     OrangePi_Camera_Capabilities(dev);
     OrangePi_Set_input(dev);
     OrangePi_Set_Params(dev);
-//  OrangePi_Set_Frame_Rate(dev);
+//    OrangePi_Set_Frame_Rate(dev);
     OrangePi_Current_Framer(dev);
     OrangePi_Set_Buffer(dev);
     OrangePi_Prepare_Capture(dev);
@@ -392,6 +405,7 @@ static int OrangePi_init(struct OrangePi_v4l2_device *dev)
 }
 
 struct OrangePi_v4l2_device OrangePi = {
+    .device_name = DEVICE_NAME,
     .init     = OrangePi_init,
     .open     = OrangePi_open,
     .close    = OrangePi_close,

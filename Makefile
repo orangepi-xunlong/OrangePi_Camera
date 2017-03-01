@@ -21,7 +21,7 @@ $(TARGET): $(OBJS)
 	$(V)$(CC) $< -ljpeg -lOrangePi_SharedLib -o $@
 	$(V)rm *.o
 
-$(SharedLibrary): OrangePi_SharedLib.c OrangePi_V4L2.c OrangePi_ImageLibrary.c
+$(SharedLibrary): src/OrangePi_Configure.c OrangePi_SharedLib.c OrangePi_V4L2.c OrangePi_ImageLibrary.c
 	$(V)$(CC) $^ $(FLAGS)  -shared -fPIC -o $@
 	$(V)mv $@ lib/
 
@@ -30,10 +30,16 @@ $(SharedLibrary): OrangePi_SharedLib.c OrangePi_V4L2.c OrangePi_ImageLibrary.c
 main.o: main.c
 	$(V)$(CC) $< $(FLAGS) -c -o $@
 
+# Flex source code
+OrangePi_Configure.c: OrangePi_Configure.l
+	$(V)flex $<
+	$(V)mv lex.yy.c src/OrangePi_Configure.c
+
 .PHONY: intall
 install:
 	$(V)cp -rfa lib/libOrangePi_SharedLib.so /usr/lib/libOrangePi_SharedLib.so
 	$(V)cp -rfa include/OrangePiV4L2 /usr/include
+	$(V)cp -rfa OrangePi_Camera.conf /etc
 
 .PHONY: clean
 clean:
