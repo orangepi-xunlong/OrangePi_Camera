@@ -2201,6 +2201,20 @@ void OrangePi_Show_Current_Camera_Configure(void)
     DEBUG_ORANGEPI("Buffer Number:\t\t%d\n", OrangePi_Get_Buffer_Number());    
     DEBUG_ORANGEPI("============================\n");    
 }
+
+/*
+ * Release all resource 
+ */
+void OrangePi_Configure_Release(void)
+{
+    if (OrangePi_Camera_Config.Platform != NULL)
+        free(OrangePi_Camera_Config.Platform);    
+    if (OrangePi_Camera_Config.Camera_name != NULL)
+        free(OrangePi_Camera_Config.Camera_name);    
+    if (OrangePi_Camera_Config.Device_name != NULL)
+        free(OrangePi_Camera_Config.Device_name);    
+}
+
 /*
  * Parsing Configure file from "/etc/OrangePi_Camera.conf"
  */

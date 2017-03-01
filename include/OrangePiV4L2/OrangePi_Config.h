@@ -7,6 +7,9 @@ int OrangePi_Parse_Configure(void);
 /* Show current camera configure */
 void OrangePi_Show_Current_Camera_Configure(void);
 
+/* Release all resource */
+void OrangePi_Configure_Release(void);
+
 char *OrangePi_Get_Camera_Name(void);
 char *OrangePi_Get_Device_Name(void);
 int OrangePi_Get_Capture_Width(void);

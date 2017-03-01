@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     OrangePi_device_captureOne(dev, "./Before.jpg");
     OrangePi_device_close(dev);
 
-
+    OrangePi_Configure_Release();
     printf("Hello World\n");  
     return 0;    
 }
