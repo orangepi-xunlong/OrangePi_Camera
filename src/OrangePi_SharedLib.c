@@ -37,6 +37,14 @@ void OrangePi_Process_Image(struct OrangePi_v4l2_device *dev, const char *JPEG_P
 }
 
 /*
+ * Cover YUYV to JPEG
+ */
+void OrangePi_JPEG(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
+{
+    imageProcess(dev->buffers->YUV_buffer, (char *)JPEG_PATH, dev->width, dev->height, 50);    
+}
+
+/*
  * Cover YUYV to BMP
  */
 void OrangePi_BMP(struct OrangePi_v4l2_device *dev, const char *BMP_PATH)

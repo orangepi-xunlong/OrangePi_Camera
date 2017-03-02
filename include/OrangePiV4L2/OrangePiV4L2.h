@@ -76,6 +76,8 @@ void OrangePi_device_captureOne(struct OrangePi_v4l2_device *, const char *);
 /* Get BMP picture */
 void OrangePi_BMP(struct OrangePi_v4l2_device *, const char *);
 
-extern int write_JPEG_file(const char *, unsigned char*, int, int, int);
+int write_JPEG_file(const char *, unsigned char*, int, int, int);
+
+void OrangePi_JPEG(struct OrangePi_v4l2_device *, const char *);
 
 #endif
