@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     dev = OrangePi_device_init();
 //    OrangePi_device_captureOne(dev, "./Before.jpg");
-    OrangePi_BMP(dev, "./Before.jpg");
+    OrangePi_BMP(dev, "./Before.bmp");
     OrangePi_device_close(dev);
 
     OrangePi_Configure_Release();

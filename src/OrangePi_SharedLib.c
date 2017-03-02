@@ -1,4 +1,5 @@
 #include <OrangePiV4L2/OrangePiV4L2.h>
+#include <OrangePiV4L2/YUYV2BMP.h>
 
 /*
  * Initialize a OrangePi Camera device

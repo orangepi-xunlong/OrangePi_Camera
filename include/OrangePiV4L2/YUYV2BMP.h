@@ -81,4 +81,6 @@ void uninit_conv();
 
 void create_bmp(FILE *fd);
 
+void Get_BMP(unsigned char *,unsigned int , unsigned int, FILE *);
+
 #endif
