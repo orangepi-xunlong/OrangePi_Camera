@@ -35,6 +35,18 @@ void OrangePi_Process_Image(struct OrangePi_v4l2_device *dev, const char *JPEG_P
     write_JPEG_file(JPEG_PATH, dev->buffers->YUV_buffer, 100, dev->width, dev->height);
 }
 
+/*
+ * Cover YUYV to BMP
+ */
+void OrangePi_BMP(struct OrangePi_v4l2_device *dev, const char *BMP_PATH)
+{
+    FILE *fd = fopen(BMP_PATH, "wb");
+
+    Get_BMP(dev->buffers->YUV_buffer, dev->width, dev->height, fd);
+    
+    fclose(fd);    
+}
+
 /* 
  * Capture one picture
  */

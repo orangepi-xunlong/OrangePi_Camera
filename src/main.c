@@ -11,7 +11,8 @@ int main(int argc, char *argv[])
     OrangePi_Show_Current_Camera_Configure();
 
     dev = OrangePi_device_init();
-    OrangePi_device_captureOne(dev, "./Before.jpg");
+//    OrangePi_device_captureOne(dev, "./Before.jpg");
+    OrangePi_BMP(dev, "./Before.jpg");
     OrangePi_device_close(dev);
 
     OrangePi_Configure_Release();
