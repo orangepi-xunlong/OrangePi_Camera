@@ -26,7 +26,7 @@ $(TARGET): $(OBJS)
 
 $(SharedLibrary): $(SharedFile)
 	$(V)$(CC) $^ $(FLAGS)  -shared -fPIC -o $@
-	$(V)mv $@ lib/
+	$(V)mv $@ /usr/lib/libOrangePi_SharedLib.so
 
 
 # C source code
@@ -40,7 +40,6 @@ OrangePi_Configure.c: OrangePi_Configure.l
 
 .PHONY: intall
 install:
-	$(V)cp -rfa lib/libOrangePi_SharedLib.so /usr/lib/libOrangePi_SharedLib.so
 	$(V)cp -rfa include/OrangePiV4L2 /usr/include
 	$(V)cp -rfa OrangePi_Camera.conf /etc
 
