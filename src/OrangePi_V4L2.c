@@ -25,7 +25,7 @@ static int OrangePi_open(struct OrangePi_v4l2_device *dev)
     int fd = open(dev->device_name,O_RDWR | O_NONBLOCK,0);
     
     if(fd < 0) {
-    	DEBUG_ORANGEPI("ERROR: Fail to open the video0 device\n");
+    	DEBUG_ERROR("ERROR: Fail to open the video0 device\n");
 	    return -1;
     }
     
@@ -49,7 +49,7 @@ static void OrangePi_close(struct OrangePi_v4l2_device *dev)
 unmap:
     for(; i < dev->buffers->n_buffers ; i++) {
 	if(munmap(dev->buffers->Raw_buffers[i].start , dev->buffers->Raw_buffers[i].length)) {
-	    DEBUG_ORANGEPI("ERROR:Faild to free mmap area!\n");
+	    DEBUG_ERROR("ERROR:Faild to free mmap area!\n");
 	    goto unmap;
 	}	
     }
@@ -71,16 +71,16 @@ static int OrangePi_Camera_Capabilities(struct OrangePi_v4l2_device *dev)
 
     DEBUG_ORANGEPI("OrangePi_Camera_Capabilities\n");
     if(ioctl(dev->fd,VIDIOC_QUERYCAP,&cap) < 0) {
-	    DEBUG_ORANGEPI("ERROR:Can't get support information of camera\n");
-	return -1;
+	    DEBUG_ERROR("ERROR:Can't get support information of camera\n");
+	    return -1;
     }
 
     if((cap.capabilities & V4L2_CAP_VIDEO_CAPTURE) == 0) {
-	    DEBUG_ORANGEPI("ERROR:[%s]Video capture not support\n",__func__);
+	    DEBUG_WARN("WARN:[%s]Video capture not support\n",__func__);
     }
 
     if((cap.capabilities & V4L2_CAP_STREAMING) == 0) 
-	    DEBUG_ORANGEPI("ERROR:[%s]Device don't support streaming i/o\n",__func__);
+	    DEBUG_WARN("WARN:[%s]Device don't support streaming i/o\n",__func__);
 
     /* Show support*/
     DEBUG_ORANGEPI("======= Support Information ==========\n");
@@ -157,7 +157,7 @@ static int OrangePi_Set_input(struct OrangePi_v4l2_device *dev)
     count -= 1;
 
     if(ioctl(dev->fd , VIDIOC_S_INPUT , &count) == -1) {
-	    DEBUG_ORANGEPI("ERROR:Selecting input %d\n",count);
+	    DEBUG_ERROR("ERROR:Selecting input %d\n",count);
 	    return -1;
     }
     return 0;
@@ -173,22 +173,37 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
 
     DEBUG_ORANGEPI("OrangePi_Set_Params\n");
     memset(&fmt,0,sizeof(struct v4l2_format));
-    fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    fmt.fmt.pix.width  = dev->width;
-    fmt.fmt.pix.height = dev->height;
-    fmt.fmt.pix.field  = V4L2_FIELD_ANY;
-    fmt.fmt.pix.pixelformat = dev->format;
-    fmt.fmt.pix.sizeimage   = dev->width * dev->height * 3 / 2;
-    fmt.fmt.pix.colorspace = 8;
- 
+    if ((strcmp("OrangePi_H5", OrangePi_Get_Platform()) == 0) || 
+        (strcmp("OrangePi_H3", OrangePi_Get_Platform()) == 0) ||
+        (strcmp("OrangePi_H2", OrangePi_Get_Platform()) == 0)) {
+        fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        fmt.fmt.pix.width  = dev->width;
+        fmt.fmt.pix.height = dev->height;
+        fmt.fmt.pix.field  = V4L2_FIELD_ANY;
+        fmt.fmt.pix.pixelformat = dev->format;
+        fmt.fmt.pix.sizeimage   = dev->width * dev->height * 3 / 2;
+        fmt.fmt.pix.colorspace = 8;
+    } else if (strcmp("OrangePi_RDA", OrangePi_Get_Platform()) == 0) {
+        fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        fmt.fmt.pix.width  = dev->width;
+        fmt.fmt.pix.height = dev->height;
+        fmt.fmt.pix.field  = V4L2_FIELD_ANY;
+        fmt.fmt.pix.pixelformat = dev->format;
+        fmt.fmt.pix.sizeimage   = dev->width * dev->height * 2;
+        fmt.fmt.pix.colorspace = 8;
+    } else {
+        DEBUG_ERROR("Unknown Platform!\n");
+        return -1;    
+    }
+
     if(OrangePi_Format_Support(dev) < 0) {
-	    DEBUG_ORANGEPI("Pls use another mode.\n");
-	return -1;
+	    DEBUG_ERROR("Pls use another mode.\n");
+	    return -1;
     }
 
     if(ioctl(dev->fd,VIDIOC_S_FMT,&fmt) == -1) {
-	    DEBUG_ORANGEPI("ERROR:Faild to set format.\n");
-	return -1;
+	    DEBUG_ERROR("ERROR:Faild to set format.\n");
+	    return -1;
     }
 
     DEBUG_ORANGEPI("Select Camera Mode:\n"
@@ -203,8 +218,8 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
     dev->height = fmt.fmt.pix.height;
 
     if(dev->format != fmt.fmt.pix.pixelformat) {
-	    DEBUG_ORANGEPI("ERROR:Format not accepted\n");
-	return -1;
+	    DEBUG_ERROR("ERROR:Format not accepted\n");
+	    return -1;
     }
 
     return 0;
@@ -224,7 +239,7 @@ static int OrangePi_Set_Frame_Rate(struct OrangePi_v4l2_device *dev)
     setfps.parm.capture.timeperframe.denominator = dev->fps;
 
     if(ioctl(dev->fd, VIDIOC_S_PARM , &setfps) < 0) {
-	    DEBUG_ORANGEPI("ERROR: Bad Setting fram rate.\n");
+	    DEBUG_ERROR("ERROR: Bad Setting fram rate.\n");
 	    return -1;
     }
     dev->fps = setfps.parm.capture.timeperframe.denominator;
@@ -248,12 +263,12 @@ static int OrangePi_Set_Buffer(struct OrangePi_v4l2_device *dev)
     req.memory = V4L2_MEMORY_MMAP;
 
     if(ioctl(dev->fd, VIDIOC_REQBUFS,&req) < 0) {
-	    DEBUG_ORANGEPI("ERROR:Can't get v4l2 buffer!\n");
+	    DEBUG_ERROR("ERROR:Can't get v4l2 buffer!\n");
 	    return -1;
     }
 
     if(req.count < 2) {
-	    DEBUG_ORANGEPI("ERROR:Can't get full buffer!\n");
+	    DEBUG_ERROR("ERROR:Can't get full buffer!\n");
 	    return -1;
     }
 
@@ -268,7 +283,7 @@ static int OrangePi_Set_Buffer(struct OrangePi_v4l2_device *dev)
 	    buf.index    = i;
 	
 	    if(ioctl(dev->fd , VIDIOC_QUERYBUF , &buf) == -1) {
-	        DEBUG_ORANGEPI("ERROR:Can't get buffer from v4l2 driver.\n");
+	        DEBUG_ERROR("ERROR:Can't get buffer from v4l2 driver.\n");
 	        return -1;
 	    }
 	    dev->buffers->Raw_buffers[i].length = buf.length;
@@ -276,7 +291,7 @@ static int OrangePi_Set_Buffer(struct OrangePi_v4l2_device *dev)
 				    mmap(NULL,buf.length, PROT_READ | PROT_WRITE,
 					    MAP_SHARED , dev->fd , buf.m.offset);
 	    if(MAP_FAILED == dev->buffers->Raw_buffers[i].start) {
-	        DEBUG_ORANGEPI("ERROR: MAP_FAILED.\n");
+	        DEBUG_ERROR("ERROR: MAP_FAILED.\n");
 	        return -1;
 	    }
     }
@@ -302,13 +317,13 @@ static int OrangePi_Prepare_Capture(struct OrangePi_v4l2_device *dev)
 	    buf.index  = i;
 
 	    if(ioctl(dev->fd , VIDIOC_QBUF , &buf) < 0) {
-	        DEBUG_ORANGEPI("ERROR:BAD VIDIOC_QBUF\n");
+	        DEBUG_ERROR("ERROR:BAD VIDIOC_QBUF\n");
 	        return -1;
 	    }
     }
     type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     if(ioctl(dev->fd , VIDIOC_STREAMON , &type) < 0) {
-	    DEBUG_ORANGEPI("ERROR:BAD VIDIOC_STREAM\n");
+	    DEBUG_ERROR("ERROR:BAD VIDIOC_STREAM\n");
 	    return -1;
     }
     return 0;
@@ -333,7 +348,7 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
     tv.tv_usec = 0;
     
     if(select(dev->fd + 1 , &fds , NULL , NULL , &tv) == -1) {
-	    DEBUG_ORANGEPI("ERROR:Waiting for Frame\n");
+	    DEBUG_ERROR("ERROR:Waiting for Frame\n");
 	    return -1;
     }
     
@@ -343,7 +358,7 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
 
     /* Dequeue buffer */
     if(ioctl(dev->fd , VIDIOC_DQBUF , &buf) < 0) {
-	    DEBUG_ORANGEPI("ERROR:VIDIOC_DQBUF\n");
+	    DEBUG_ERROR("ERROR:VIDIOC_DQBUF\n");
 	    return -1;
     }
 
@@ -356,7 +371,7 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
 #endif
     /* Put buffers */
     if(ioctl(dev->fd , VIDIOC_QBUF , &buf) < 0) {
-	    DEBUG_ORANGEPI("ERROR:Bad Put Buffer\n");
+	    DEBUG_ERROR("ERROR:Bad Put Buffer\n");
 	    return -1;
     }
     

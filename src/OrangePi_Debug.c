@@ -18,3 +18,15 @@ void DEBUG_ORANGEPI(const char *fmt, ...)
         va_end(ap);    
     }    
 }
+
+/*
+ * Parse a argment list of variable string.
+ */
+void DEBUG_ERROR(const char *fmt, ...)
+{
+    va_list ap;
+        
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);    
+}
