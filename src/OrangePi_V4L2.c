@@ -392,7 +392,7 @@ static int OrangePi_init(struct OrangePi_v4l2_device *dev)
     return 0;
 }
 
-struct OrangePi_v4l2_device OrangePi = {
+struct OrangePi_v4l2_driver OrangePi = {
     .init     = OrangePi_init,
     .open     = OrangePi_open,
     .close    = OrangePi_close,
@@ -401,4 +401,3 @@ struct OrangePi_v4l2_device OrangePi = {
     .capture  = OrangePi_Capture,
     .current_framer = OrangePi_Current_Framer,
 };
-

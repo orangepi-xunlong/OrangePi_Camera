@@ -22,6 +22,18 @@ struct OrangePi_buffer {
     char *YUV_buffer;
 };
 
+struct OrangePi_v4l2_device;
+
+struct OrangePi_v4l2_driver {
+    int  (*open)(struct OrangePi_v4l2_device *dev);
+    void (*close)(struct OrangePi_v4l2_device *dev);
+    int  (*init)(struct OrangePi_v4l2_device *dev);
+    int  (*capable)(struct OrangePi_v4l2_device *dev);
+    int  (*check_format)(struct OrangePi_v4l2_device *dev);
+    int  (*capture)(struct OrangePi_v4l2_device *dev);
+    void (*current_framer)(struct OrangePi_v4l2_device *dev);
+};
+
 struct OrangePi_v4l2_device {
     int  fd;
     FILE *buffer_fd;
@@ -33,13 +45,7 @@ struct OrangePi_v4l2_device {
     unsigned int fps;
     struct OrangePi_buffer *buffers;
     void *private_data;
-    int  (*open)(struct OrangePi_v4l2_device *dev);
-    void (*close)(struct OrangePi_v4l2_device *dev);
-    int  (*init)(struct OrangePi_v4l2_device *dev);
-    int  (*capable)(struct OrangePi_v4l2_device *dev);
-    int  (*check_format)(struct OrangePi_v4l2_device *dev);
-    int  (*capture)(struct OrangePi_v4l2_device *dev);
-    void (*current_framer)(struct OrangePi_v4l2_device *dev);
+    struct OrangePi_v4l2_driver *drv;
 };
 
 struct OrangePi_v4l2_configure {
@@ -56,13 +62,13 @@ struct OrangePi_v4l2_configure {
 };
 
 /* OrangePi Device */
-extern struct OrangePi_v4l2_device OrangePi;
+extern struct OrangePi_v4l2_driver OrangePi;
 
 /* Initialize OrangePi Camera device */
-struct OrangePi_v4l2_device *OrangePi_device_init(void);
+int OrangePi_V4L2_init(struct OrangePi_v4l2_device *);
 
 /* Close a OrangePi Camera device */
-void OrangePi_device_close(struct OrangePi_v4l2_device *);
+void OrangePi_V4L2_exit(struct OrangePi_v4l2_device *);
 
 /* Capture a picture */
 void OrangePi_device_capture(struct OrangePi_v4l2_device *);
@@ -71,7 +77,7 @@ void OrangePi_device_capture(struct OrangePi_v4l2_device *);
 void OrangePi_Process_Image(struct OrangePi_v4l2_device *, const char *);
 
 /* Capture one picture */
-void OrangePi_device_captureOne(struct OrangePi_v4l2_device *, const char *);
+void OrangePi_Capture_One(struct OrangePi_v4l2_device *, const char *);
 
 /* Get BMP picture */
 void OrangePi_BMP(struct OrangePi_v4l2_device *, const char *);

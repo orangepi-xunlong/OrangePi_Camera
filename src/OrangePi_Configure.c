@@ -553,7 +553,7 @@ int totlines = 0;
 
 int Calc_Table[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000 };
 
-struct OrangePi_v4l2_configure OrangePi_Camera_Config;
+struct OrangePi_v4l2_configure *OrangePi_Camera_Config;
 
 static void OrangePi_Set_Camera_Name(const char *);
 static void OrangePi_Set_Device_Name(const char *);
@@ -1936,9 +1936,9 @@ static void OrangePi_Set_Platform(const char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    OrangePi_Camera_Config.Platform = (char *)malloc(len);
-    strncpy(OrangePi_Camera_Config.Platform, tmp, len);
-    OrangePi_Camera_Config.Platform[len - 1] = '\0';
+    OrangePi_Camera_Config->Platform = (char *)malloc(len);
+    strncpy(OrangePi_Camera_Config->Platform, tmp, len);
+    OrangePi_Camera_Config->Platform[len - 1] = '\0';
 }
 
 /*
@@ -1951,9 +1951,9 @@ static void OrangePi_Set_Camera_Name(const char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    OrangePi_Camera_Config.Camera_name = (char *)malloc(len);
-    strncpy(OrangePi_Camera_Config.Camera_name, tmp, len);
-    OrangePi_Camera_Config.Camera_name[len - 1] = '\0';
+    OrangePi_Camera_Config->Camera_name = (char *)malloc(len);
+    strncpy(OrangePi_Camera_Config->Camera_name, tmp, len);
+    OrangePi_Camera_Config->Camera_name[len - 1] = '\0';
 }
 
 /*
@@ -1966,9 +1966,9 @@ static void OrangePi_Set_Device_Name(const char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    OrangePi_Camera_Config.Device_name = (char *)malloc(len);
-    strncpy(OrangePi_Camera_Config.Device_name, tmp, len);
-    OrangePi_Camera_Config.Device_name[len - 1] = '\0';
+    OrangePi_Camera_Config->Device_name = (char *)malloc(len);
+    strncpy(OrangePi_Camera_Config->Device_name, tmp, len);
+    OrangePi_Camera_Config->Device_name[len - 1] = '\0';
 }
 
 /*
@@ -1981,7 +1981,7 @@ static void OrangePi_Set_Capture_width(const char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    str2int(tmp, &OrangePi_Camera_Config.Capture_width, len - 1);
+    str2int(tmp, &OrangePi_Camera_Config->Capture_width, len - 1);
 }
 
 /*
@@ -1994,7 +1994,7 @@ static void OrangePi_Set_Capture_Height(char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    str2int(tmp, &OrangePi_Camera_Config.Capture_Height, len - 1);
+    str2int(tmp, &OrangePi_Camera_Config->Capture_Height, len - 1);
 }
 
 /*
@@ -2007,7 +2007,7 @@ static void OrangePi_Set_Buffer_Number(char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    str2int(tmp, &OrangePi_Camera_Config.Buffer_Number, len - 1);
+    str2int(tmp, &OrangePi_Camera_Config->Buffer_Number, len - 1);
 }
 
 /*
@@ -2020,7 +2020,7 @@ static void OrangePi_Set_Capture_Timeout(char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    str2int(tmp, &OrangePi_Camera_Config.Capture_Timeout, len - 1);
+    str2int(tmp, &OrangePi_Camera_Config->Capture_Timeout, len - 1);
 }
 
 /*
@@ -2038,43 +2038,43 @@ static void OrangePi_Set_Capture_Format(char *name)
     tmp1[len - 1] = '\0';
     /* Search Table */
     if (strcmp(tmp1, "V4L2_PIX_FMT_YVU410") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YVU410;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YVU410;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YVU420") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YVU420;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YVU420;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUYV") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUYV;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUYV;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YYUV") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YYUV;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YYUV;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YVYU") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YVYU;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YVYU;
     if (strcmp(tmp1, "V4L2_PIX_FMT_UYVY") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_UYVY;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_UYVY;
     if (strcmp(tmp1, "V4L2_PIX_FMT_VYUY") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_VYUY;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_VYUY;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV422P") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV422P;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV422P;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV411P") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV411P;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV411P;
     if (strcmp(tmp1, "V4L2_PIX_FMT_Y41P") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_Y41P;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_Y41P;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV444") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV444;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV444;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV555") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV555;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV555;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV565") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV565;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV565;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV32") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV32;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV32;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV410") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV410;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV410;
     if (strcmp(tmp1, "V4L2_PIX_FMT_YUV420") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_YUV420;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_YUV420;
     if (strcmp(tmp1, "V4L2_PIX_FMT_HI240") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_HI240;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_HI240;
     if (strcmp(tmp1, "V4L2_PIX_FMT_HM12") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_HM12;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_HM12;
     if (strcmp(tmp1, "V4L2_PIX_FMT_M420") == 0)
-        OrangePi_Camera_Config.Capture_Format = V4L2_PIX_FMT_M420;
+        OrangePi_Camera_Config->Capture_Format = V4L2_PIX_FMT_M420;
 }
 
 /*
@@ -2087,7 +2087,7 @@ static void OrangePi_Set_Capture_FPS(char *name)
 
     tmp = strstr(name, "=") + 1;
     len = strlen(tmp);
-    str2int(tmp, &OrangePi_Camera_Config.Capture_FPS, len - 1);
+    str2int(tmp, &OrangePi_Camera_Config->Capture_FPS, len - 1);
 }
 
 /*
@@ -2099,9 +2099,9 @@ static void OrangePi_Set_DEBUG(const char *name)
 
     tmp = strstr(name, "=") + 1;
     if (strncmp(tmp, "ON", 2) == 0)
-        OrangePi_Camera_Config.DEBUG = 1;
+        OrangePi_Camera_Config->DEBUG = 1;
     else
-        OrangePi_Camera_Config.DEBUG = 0;
+        OrangePi_Camera_Config->DEBUG = 0;
 }
 
 /*
@@ -2109,7 +2109,7 @@ static void OrangePi_Set_DEBUG(const char *name)
  */
 char *OrangePi_Get_Platform(void)
 {
-    return OrangePi_Camera_Config.Platform;    
+    return OrangePi_Camera_Config->Platform;    
 }
 
 /*
@@ -2117,7 +2117,7 @@ char *OrangePi_Get_Platform(void)
  */
 char *OrangePi_Get_Camera_Name(void)
 {
-    return OrangePi_Camera_Config.Camera_name;    
+    return OrangePi_Camera_Config->Camera_name;    
 }
 
 /*
@@ -2125,7 +2125,7 @@ char *OrangePi_Get_Camera_Name(void)
  */
 char *OrangePi_Get_Device_Name(void)
 {
-    return OrangePi_Camera_Config.Device_name;    
+    return OrangePi_Camera_Config->Device_name;    
 }
 
 /*
@@ -2133,7 +2133,7 @@ char *OrangePi_Get_Device_Name(void)
  */
 int OrangePi_Get_Capture_Width(void)
 {
-    return OrangePi_Camera_Config.Capture_width;    
+    return OrangePi_Camera_Config->Capture_width;    
 }
 
 /*
@@ -2141,7 +2141,7 @@ int OrangePi_Get_Capture_Width(void)
  */
 int OrangePi_Get_Capture_Height(void)
 {
-    return OrangePi_Camera_Config.Capture_Height;    
+    return OrangePi_Camera_Config->Capture_Height;    
 }
 
 /*
@@ -2149,7 +2149,7 @@ int OrangePi_Get_Capture_Height(void)
  */
 int OrangePi_Get_Capture_Format(void)
 {
-    return OrangePi_Camera_Config.Capture_Format;    
+    return OrangePi_Camera_Config->Capture_Format;    
 }
 
 /*
@@ -2157,7 +2157,7 @@ int OrangePi_Get_Capture_Format(void)
  */
 int OrangePi_Get_Capture_FPS(void)
 {
-    return OrangePi_Camera_Config.Capture_FPS;    
+    return OrangePi_Camera_Config->Capture_FPS;    
 }
 
 /*
@@ -2165,7 +2165,7 @@ int OrangePi_Get_Capture_FPS(void)
  */
 int OrangePi_Get_Capture_Timeout(void)
 {
-    return OrangePi_Camera_Config.Capture_Timeout;    
+    return OrangePi_Camera_Config->Capture_Timeout;    
 }
 
 /*
@@ -2173,7 +2173,7 @@ int OrangePi_Get_Capture_Timeout(void)
  */
 int OrangePi_Get_Buffer_Number(void)
 {
-    return OrangePi_Camera_Config.Buffer_Number;    
+    return OrangePi_Camera_Config->Buffer_Number;    
 }
 
 /*
@@ -2181,7 +2181,7 @@ int OrangePi_Get_Buffer_Number(void)
  */
 int OrangePi_Get_DEBUG(void)
 {
-    return OrangePi_Camera_Config.DEBUG;    
+    return OrangePi_Camera_Config->DEBUG;    
 }
 
 /*
@@ -2207,18 +2207,33 @@ void OrangePi_Show_Current_Camera_Configure(void)
  */
 void OrangePi_Configure_Release(void)
 {
-    if (OrangePi_Camera_Config.Platform != NULL)
-        free(OrangePi_Camera_Config.Platform);    
-    if (OrangePi_Camera_Config.Camera_name != NULL)
-        free(OrangePi_Camera_Config.Camera_name);    
-    if (OrangePi_Camera_Config.Device_name != NULL)
-        free(OrangePi_Camera_Config.Device_name);    
+    if (OrangePi_Camera_Config->Platform != NULL)
+        free(OrangePi_Camera_Config->Platform);    
+    if (OrangePi_Camera_Config->Camera_name != NULL)
+        free(OrangePi_Camera_Config->Camera_name);    
+    if (OrangePi_Camera_Config->Device_name != NULL)
+        free(OrangePi_Camera_Config->Device_name);    
 }
 
 /*
+ * Set private data
+ */
+static void OrangePi_Set_Private_Configure(struct OrangePi_v4l2_configure *conf)
+{
+    OrangePi_Camera_Config = conf;    
+}
+
+/*
+ * Get configure
+ */
+struct OrangePi_v4l2_configure *OrangePi_Get_Private_Configure(void)
+{
+    return OrangePi_Camera_Config;    
+}
+/*
  * Parsing Configure file from "/etc/OrangePi_Camera.conf"
  */
-int OrangePi_Parse_Configure(void)
+int OrangePi_Parse_Configure(struct OrangePi_v4l2_configure *conf)
 {
 
 	FILE *f = fopen(CONFIG_PATH, "r");
@@ -2227,6 +2242,7 @@ int OrangePi_Parse_Configure(void)
 		perror(CONFIG_PATH);
 		return -1;
 	}
+    OrangePi_Set_Private_Configure(conf);
 		
     yyrestart(f);
 	yylex();

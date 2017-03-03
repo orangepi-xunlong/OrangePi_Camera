@@ -1,31 +1,13 @@
 #include <OrangePiV4L2/OrangePiV4L2.h>
 #include <OrangePiV4L2/YUYV2BMP.h>
-
-/*
- * Initialize a OrangePi Camera device
- */
-struct OrangePi_v4l2_device *OrangePi_device_init(void)
-{
-    /* Prepare v4l2 device */
-    OrangePi.init(&OrangePi);
-    
-    return &OrangePi;    
-}
-
-/*
- * Close a OrangePi Camera device
- */
-void OrangePi_device_close(struct OrangePi_v4l2_device *dev)
-{
-    dev->close(dev);    
-}
+#include <OrangePiV4L2/OrangePi_Config.h>
 
 /*
  * Capture a picture
  */
 void OrangePi_device_capture(struct OrangePi_v4l2_device *dev)
 {
-    dev->capture(dev);    
+    dev->drv->capture(dev);    
 }
 
 /*
@@ -33,6 +15,16 @@ void OrangePi_device_capture(struct OrangePi_v4l2_device *dev)
  */
 void OrangePi_Process_Image(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
 {
+    write_JPEG_file(JPEG_PATH, dev->buffers->YUV_buffer, 100, dev->width, dev->height);
+}
+
+/*
+ * Capture one Picture
+ */
+void OrangePi_Capture_One(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
+{
+    OrangePi_Show_Current_Camera_Configure();
+    dev->drv->capture(dev);
     write_JPEG_file(JPEG_PATH, dev->buffers->YUV_buffer, 100, dev->width, dev->height);
 }
 
@@ -56,11 +48,34 @@ void OrangePi_BMP(struct OrangePi_v4l2_device *dev, const char *BMP_PATH)
     fclose(fd);    
 }
 
-/* 
- * Capture one picture
+/*
+ * Initialize a v4l2 device
  */
-void OrangePi_device_captureOne(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
-{
-    dev->capture(dev);
-    OrangePi_Process_Image(dev, JPEG_PATH);        
+int OrangePi_V4L2_init(struct OrangePi_v4l2_device *dev)
+{  
+    struct OrangePi_v4l2_configure *conf;
+    
+    conf = (struct OrangePi_v4l2_configure *)malloc(
+                sizeof(struct OrangePi_v4l2_configure));
+    if (!conf) {
+        printf("[OrangePi Camera] Can't allow memory to Configure!\n");
+        return -1;    
+    }
+    OrangePi_Parse_Configure(conf); 
+    dev->drv = &OrangePi;
+    dev->drv->init(dev);
+
+    return 0;
 }
+
+/*
+ * Release a v4l2 device
+ */
+void OrangePi_V4L2_exit(struct OrangePi_v4l2_device *dev)
+{
+    dev->drv->close(dev);
+    dev->drv = NULL;
+    OrangePi_Configure_Release();
+    free(OrangePi_Get_Private_Configure());
+}
+

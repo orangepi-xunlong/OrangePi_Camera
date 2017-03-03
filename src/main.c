@@ -7,16 +7,20 @@ int main(int argc, char *argv[])
 {
     struct OrangePi_v4l2_device *dev;
 
-    OrangePi_Parse_Configure();
-    OrangePi_Show_Current_Camera_Configure();
+    dev = (struct OrangePi_v4l2_device *)malloc(
+            sizeof(struct OrangePi_v4l2_device));
+    if (!dev) {
+        printf("[OrangePi Camera] Can't allow memory!\n");
+        return -1;    
+    }
 
-    dev = OrangePi_device_init();
-    OrangePi_device_captureOne(dev, "./Before.jpg");
-//    OrangePi_BMP(dev, "./Before.bmp");
-//    OrangePi_JPEG(dev, "./BeforeJPEG.jpg");
-    OrangePi_device_close(dev);
+    OrangePi_V4L2_init(dev);
+    OrangePi_Capture_One(dev, "./Before.jpg");
+    OrangePi_V4L2_exit(dev);
 
-    OrangePi_Configure_Release();
+    /* free resource */
+    free(dev);
+
     printf("Hello World\n");  
     return 0;    
 }
