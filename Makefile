@@ -41,7 +41,7 @@ OrangePi_Configure.c: OrangePi_Configure.l
 .PHONY: intall
 install:
 	$(V)cp -rfa include/OrangePiV4L2 /usr/include
-	$(V)cp -rfa OrangePi_Camera.conf /etc
+	$(V)install OrangePi_Camera.conf /etc
 
 .PHONY: clean
 clean:
