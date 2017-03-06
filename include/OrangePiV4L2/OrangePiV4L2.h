@@ -13,6 +13,7 @@ struct buffer
     size_t length;
 };
 
+#pragma pack(1)
 struct OrangePi_BMP_HEADER
 {
     unsigned short bfType;
@@ -21,6 +22,7 @@ struct OrangePi_BMP_HEADER
     unsigned short bfReserved2;
     unsigned long bfOffBits;  
 };
+#pragma pack()
 
 struct OrangePi_BMP_INFO
 {
