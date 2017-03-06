@@ -586,8 +586,8 @@ static void _Create_BMP_Header(struct OrangePi_v4l2_device *dev,
     bfh->bfOffBits = (unsigned long)(14 + 40);
                               
     bih->biBitCount = 24;
-    bih->biWidth = dev->height;
-    bih->biHeight = dev->width;
+    bih->biWidth = dev->width;
+    bih->biHeight = dev->height;
     bih->biSizeImage = dev->height * dev->width * 3;
     bih->biClrImportant = 0;
     bih->biClrUsed = 0;
