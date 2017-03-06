@@ -15,7 +15,8 @@ int main(int argc, char *argv[])
     }
 
     OrangePi_V4L2_init(dev);
-    OrangePi_Capture_One(dev, "./Before.jpg");
+//    OrangePi_Capture_One(dev, "./Before.jpg");
+    OrangePi_BMP(dev, "./Before.bmp");
     OrangePi_V4L2_exit(dev);
 
     /* free resource */

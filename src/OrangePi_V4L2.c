@@ -22,7 +22,7 @@
  */
 static int OrangePi_open(struct OrangePi_v4l2_device *dev)
 {
-    int fd = open(dev->device_name,O_RDWR | O_NONBLOCK,0);
+    int fd = open(dev->device_name, O_RDWR | O_NONBLOCK,0);
     
     if(fd < 0) {
     	DEBUG_ERROR("ERROR: Fail to open the video0 device\n");
@@ -187,10 +187,8 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
         fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         fmt.fmt.pix.width  = dev->width;
         fmt.fmt.pix.height = dev->height;
-        fmt.fmt.pix.field  = V4L2_FIELD_ANY;
+        fmt.fmt.pix.field  = V4L2_FIELD_INTERLACED;
         fmt.fmt.pix.pixelformat = dev->format;
-        fmt.fmt.pix.sizeimage   = dev->width * dev->height * 2;
-        fmt.fmt.pix.colorspace = 8;
     } else {
         DEBUG_ERROR("Unknown Platform!\n");
         return -1;    
@@ -201,7 +199,7 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
 	    return -1;
     }
 
-    if(ioctl(dev->fd,VIDIOC_S_FMT,&fmt) == -1) {
+    if(ioctl(dev->fd, VIDIOC_S_FMT, &fmt) == -1) {
 	    DEBUG_ERROR("ERROR:Faild to set format.\n");
 	    return -1;
     }
@@ -209,9 +207,11 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
     DEBUG_ORANGEPI("Select Camera Mode:\n"
 	    "Width:  %d\n"
 	    "Height: %d\n"
+	    "Type: %d\n"
 	    "PixFmt: %s\n",
 	    fmt.fmt.pix.width,
 	    fmt.fmt.pix.height,
+        fmt.type,
 	    (char *)&fmt.fmt.pix.pixelformat);
 
     dev->width  = fmt.fmt.pix.width;
@@ -365,6 +365,8 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
     dev->buffers->YUV_buffer = 
         (unsigned char *)(unsigned long)dev->buffers->Raw_buffers[buf.index].start;
 
+    dev->buffers->current_length = dev->buffers->Raw_buffers[buf.index].length;
+
 #if DEBUG
     fwrite(dev->buffers->Raw_buffers[buf.index].start,buf.length,
 		1,dev->buffers->YUV_fd);
@@ -396,14 +398,25 @@ static int OrangePi_init(struct OrangePi_v4l2_device *dev)
     
     dev->buffers->n_buffers = OrangePi_Get_Buffer_Number();
 
-    OrangePi_open(dev);
-    OrangePi_Camera_Capabilities(dev);
-    OrangePi_Set_input(dev);
-    OrangePi_Set_Params(dev);
-//  OrangePi_Set_Frame_Rate(dev);
-    OrangePi_Current_Framer(dev);
-    OrangePi_Set_Buffer(dev);
-    OrangePi_Prepare_Capture(dev);
+    if ((strcmp(OrangePi_Get_Platform(), "OrangePi_H5") == 0) |
+        (strcmp(OrangePi_Get_Platform(), "OrangePi_H3") == 0) |
+        (strcmp(OrangePi_Get_Platform(), "OrangePi_H2") == 0)) {
+        OrangePi_open(dev);
+        OrangePi_Camera_Capabilities(dev);
+        OrangePi_Set_input(dev);
+        OrangePi_Set_Params(dev);
+    //  OrangePi_Set_Frame_Rate(dev);
+        OrangePi_Current_Framer(dev);
+        OrangePi_Set_Buffer(dev);
+        OrangePi_Prepare_Capture(dev);
+    } else if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0) {
+        OrangePi_open(dev);
+        OrangePi_Camera_Capabilities(dev);
+        OrangePi_Set_Params(dev);
+        OrangePi_Current_Framer(dev);
+        OrangePi_Set_Buffer(dev);
+        OrangePi_Prepare_Capture(dev);    
+    }
     return 0;
 }
 

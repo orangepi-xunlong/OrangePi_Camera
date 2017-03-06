@@ -1,6 +1,7 @@
 #ifndef YUVTOBMP_H
 #define YUVTOBMP_H
 
+#include <OrangePiV4L2/OrangePiV4L2.h>
 /*
  * YUV4：2：2转RGB
  * y0 cb0 y1 cr0 ---> r0 g0 b0 r1 g1 b1 
@@ -83,5 +84,9 @@ void create_bmp(FILE *fd);
 
 void Get_BMP(unsigned char *,unsigned int , unsigned int, FILE *);
 void imageProcess(const void *, char *, int, int, int);
+void OrangePi_Store_BMP(struct OrangePi_v4l2_device *, const char *);
+void OrangePi_Store_YUYV(struct OrangePi_v4l2_device *, const char *);
+void OrangePi_Move_Noise(struct OrangePi_v4l2_device *);
+void OrangePi_YUYV2RGB(struct OrangePi_v4l2_device *);
 
 #endif

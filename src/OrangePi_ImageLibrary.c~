@@ -390,15 +390,14 @@ void Get_BMP(unsigned char *yuv,unsigned int width,unsigned int height,FILE *fd)
     Free_Buffer();
 }
 
-void OrangePi_YUYV2RGB(struct OrangePi_v4l2_device *dev)  
+void OrangePi_yuyv2rgb()  
 {  
     unsigned char YUYV[4],RGB[6];  
     int j,k,i;     
     unsigned int location=0; 
-    unsigned char *starter = (unsigned char *)dev->buffers->YUV_buffer;
  
     j=0;  
-    for(i=0;i < dev->buffers->current_length;i+=4) {  
+    for(i=0;i < framebuf[buf.index].length;i+=4) {  
         YUYV[0]=starter[i];//Y0  
         YUYV[1]=starter[i+1];//U  
         YUYV[2]=starter[i+2];//Y1  
@@ -430,23 +429,21 @@ void OrangePi_YUYV2RGB(struct OrangePi_v4l2_device *dev)
                 RGB[k]=255;  
         }  
    
-        if( j % (dev->width * 3)==0) {  
-            location = (dev->height - j / (dev->width * 3)) * (dev->width * 3);  
+        if(j%(VIDEO_WIDTH*3)==0) {  
+            location=(VIDEO_HEIGHT-j/(VIDEO_WIDTH*3))*(VIDEO_WIDTH*3);  
         }  
-        bcopy(RGB, dev->buffers->newBuf + location + ( j % (dev->width *3)),sizeof(RGB));  
+        bcopy(RGB,newBuf+location+(j%(VIDEO_WIDTH*3)),sizeof(RGB));  
         j+=6;         
     }  
     return;  
 } 
 
-void OrangePi_Move_Noise(struct OrangePi_v4l2_device *dev) 
-{  
+void move_noise() {  
     int i,j,k,temp[3],temp1[3];  
     unsigned char BGR[13*3];  
     unsigned int sq,sq1,loc,loc1;  
-    int h = dev->height, w = dev->width;
+    int h=VIDEO_HEIGHT,w=VIDEO_WIDTH;
     unsigned int a;
-    unsigned char *newBuf = dev->buffers->newBuf;
   
     for(i=2;i<h-2;i++) {  
         for(j=2;j<w-2;j++) {  
@@ -517,16 +514,15 @@ void OrangePi_Move_Noise(struct OrangePi_v4l2_device *dev)
     return;  
 }  
 
-static void OrangePi_yuyv2rgb1(struct OrangePi_v4l2_device *dev)  
+void yuyv2rgb1()  
 {  
     unsigned char YUYV[3],RGB[3];    
     int j,k,i;     
     unsigned int location=0;
-    unsigned char *starter = (unsigned char *)dev->buffers->YUV_buffer;
 
-    memset(YUYV, 0, 3);  
-    j = 0;  
-    for(i = 0; i < dev->buffers->current_length; i+=2) {  
+    memset(YUYV,0,3);  
+    j=0;  
+    for(i=0;i < framebuf[buf.index].length;i+=2) {  
         YUYV[0]=starter[i];//Y0  
         if(i%4==0)  
             YUYV[1]=starter[i+1];//U  
@@ -550,72 +546,12 @@ static void OrangePi_yuyv2rgb1(struct OrangePi_v4l2_device *dev)
                 RGB[k]=255;  
         }  
         
-        if(j % (dev->width * 3) == 0) {  
-            location=(dev->height - j / (dev->width * 3)) * (dev->width * 3);  
+        if(j%(VIDEO_WIDTH*3)==0) {  
+            location=(VIDEO_HEIGHT-j/(VIDEO_WIDTH*3))*(VIDEO_WIDTH*3);  
         }  
-        bcopy(dev->buffers->newBuf, 
-                dev->buffers->newBuf + location + (j % (dev->width * 3)),sizeof(RGB));  
+        bcopy(RGB,newBuf+location+(j%(VIDEO_WIDTH*3)),sizeof(RGB));  
         j+=3;         
     }  
     return;  
-} 
-
-void OrangePi_Store_YUYV(struct OrangePi_v4l2_device *dev, const char *file_name)  
-{  
-    FILE *fp = fopen(file_name, "wb");  
-        
-    if (fp < 0) {  
-        printf("open frame data file failed\n");  
-        return;  
-    }  
-
-    fwrite(dev->buffers->YUV_buffer, 1, dev->buffers->current_length, fp);  
-    fclose(fp);  
-    printf("Capture one frame saved in %s\n", file_name);  
-        
-    return;  
-}
-
-static void _Create_BMP_Header(struct OrangePi_v4l2_device *dev,
-            struct OrangePi_BMP_HEADER *bfh, struct OrangePi_BMP_INFO *bih)
-{
-    bfh->bfType = (unsigned short)0x4D42;
-    bfh->bfSize = (unsigned long)(14 + 40 + dev->width * dev->height * 3);
-    bfh->bfReserved1 = 0;
-    bfh->bfReserved2 = 0;
-    bfh->bfOffBits = (unsigned long)(14 + 40);
-                              
-    bih->biBitCount = 24;
-    bih->biWidth = dev->height;
-    bih->biHeight = dev->width;
-    bih->biSizeImage = dev->height * dev->width * 3;
-    bih->biClrImportant = 0;
-    bih->biClrUsed = 0;
-    bih->biCompression = 0;
-    bih->biPlanes = 1;
-    bih->biSize = 40;
-    bih->biXPelsPerMeter = 0x00000ec4;
-    bih->biYPelsPerMeter = 0x00000ec4;    
-}
-
-void OrangePi_Store_BMP(struct OrangePi_v4l2_device *dev, const char *file_name)  
-{  
-    struct OrangePi_BMP_HEADER bfh;
-    struct OrangePi_BMP_INFO bih;
-    int n_len;
-    FILE *fp1 = fopen(file_name, "wb"); 
-     
-    if (fp1 < 0) {  
-        printf("open frame data file failed\n");  
-        return;  
-    }  
-    _Create_BMP_Header(dev, &bfh, &bih);
-    n_len = dev->buffers->current_length * 3 / 2;
+}   
     
-    fwrite(&bfh,sizeof(bfh),1,fp1);  
-    fwrite(&bih,sizeof(bih),1,fp1);  
-    fwrite(dev->buffers->newBuf, 1, n_len, fp1);  
-    fclose(fp1);  
-    printf("Change one frame saved in %s\n", file_name);  
-    return;  
-}      

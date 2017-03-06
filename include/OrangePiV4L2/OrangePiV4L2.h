@@ -13,6 +13,31 @@ struct buffer
     size_t length;
 };
 
+struct OrangePi_BMP_HEADER
+{
+    unsigned short bfType;
+    unsigned long bfSize;
+    unsigned short bfReserved1;
+    unsigned short bfReserved2;
+    unsigned long bfOffBits;  
+};
+
+struct OrangePi_BMP_INFO
+{
+    unsigned long biSize;
+    unsigned long biWidth;
+    unsigned long biHeight;
+    unsigned short biPlanes;
+    unsigned short biBitCount;
+    unsigned long biCompression;
+    
+    unsigned long biSizeImage;
+    unsigned long biXPelsPerMeter;
+    unsigned long biYPelsPerMeter;
+    unsigned long biClrUsed;
+    unsigned long biClrImportant;    
+};
+
 struct OrangePi_buffer {
     int n_buffers;
     FILE *Out_fd;
@@ -20,6 +45,8 @@ struct OrangePi_buffer {
     FILE *JPG_fd;
     struct buffer *Raw_buffers;
     char *YUV_buffer;
+    size_t current_length;
+    unsigned char *newBuf;
 };
 
 struct OrangePi_v4l2_device;
