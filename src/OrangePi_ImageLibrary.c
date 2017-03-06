@@ -433,8 +433,8 @@ void OrangePi_YUYV2RGB(struct OrangePi_v4l2_device *dev)
         if( j % (dev->width * 3)==0) {  
             location = (dev->height - j / (dev->width * 3)) * (dev->width * 3);  
         }  
-        bcopy(RGB, dev->buffers->newBuf + location + ( j % (dev->width *3)),sizeof(RGB));  
-        j+=6;         
+        bcopy(RGB, dev->buffers->newBuf + location + ( j % (dev->width *3)), sizeof(RGB));  
+        j += 6;         
     }  
     return;  
 } 
