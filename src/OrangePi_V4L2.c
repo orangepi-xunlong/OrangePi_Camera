@@ -402,6 +402,7 @@ static void OrangePi_RDA_Request_Buf(struct OrangePi_v4l2_device *dev)
     reqbuf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     reqbuf.memory = V4L2_MEMORY_MMAP;
 
+    dev->buffers->Raw_buffers = calloc(reqbuf.count , sizeof(struct buffer));
     ret = ioctl(dev->fd , VIDIOC_REQBUFS, &reqbuf);
     if(ret < 0) {
         printf("VIDIOC_REQBUFS failed (%d)\n", ret);
