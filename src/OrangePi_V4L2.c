@@ -14,6 +14,7 @@
 #include <OrangePiV4L2/OrangePiV4L2.h>
 #include <OrangePiV4L2/OrangePi_Config.h>
 #include <OrangePiV4L2/OrangePi_Debug.h>
+#include <OrangePiV4L2/YUYV2BMP.h>
 
 #define DEBUG  0
 
