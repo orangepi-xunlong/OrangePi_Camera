@@ -17,6 +17,8 @@
 
 #define DEBUG  0
 
+struct v4l2_buffer RDA_buf;
+
 /*
  * Open the device.
  */
@@ -418,30 +420,28 @@ static void OrangePi_RDA_Query_Map_Qbuf(struct OrangePi_v4l2_device *dev)
     int i, ret;  
         
     for (i = 0; i < dev->buffers->n_buffers; i++) {  
-        struct v4l2_buffer buf;
-
-        buf.index = i;  
-        buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
-        buf.memory = V4L2_MEMORY_MMAP;  
+        RDA_buf.index = i;  
+        RDA_buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
+        RDA_buf.memory = V4L2_MEMORY_MMAP;  
             
-        ret = ioctl(dev->fd , VIDIOC_QUERYBUF, &buf); 
+        ret = ioctl(dev->fd , VIDIOC_QUERYBUF, &RDA_buf); 
         if(ret < 0) {  
             printf("VIDIOC_QUERYBUF (%d) failed (%d)\n", i, ret);  
             return;  
         }  
       
         /* mmap buffer */  
-        dev->buffers->Raw_buffers[i].length = buf.length;
+        dev->buffers->Raw_buffers[i].length = RDA_buf.length;
         dev->buffers->Raw_buffers[i].start  =
-                mmap(0, buf.length, PROT_READ | PROT_WRITE,
-                        MAP_SHARED , dev->fd , buf.m.offset);
+                mmap(0, RDA_buf.length, PROT_READ | PROT_WRITE,
+                        MAP_SHARED , dev->fd , RDA_buf.m.offset);
             
         if (dev->buffers->Raw_buffers[i].start == MAP_FAILED) {  
             printf("mmap failed\n");  
             return;  
         }  
         
-        ret = ioctl(dev->fd , VIDIOC_QBUF, &buf);  
+        ret = ioctl(dev->fd , VIDIOC_QBUF, &RDA_buf);  
         if (ret < 0) {  
             printf("VIDIOC_QBUF (%d) failed (%d)\n", i, ret);  
             return;  
@@ -537,6 +537,53 @@ static int OrangePi_Capture(struct OrangePi_v4l2_device *dev)
     return 0;  
 }
 
+static void OrangePi_RDA_init(struct OrangePi_v4l2_device *dev)
+{
+    
+    int i, ret;
+    enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+
+    OrangePi_RDA_Open_Device(dev);
+    OrangePi_RDA_Get_Capabilities(dev);
+    OrangePi_RDA_Get_Format(dev);
+    OrangePi_RDA_Set_Format(dev);
+    OrangePi_RDA_Request_Buf(dev);
+    OrangePi_RDA_Query_Map_Qbuf(dev);   
+
+    ret = ioctl(dev->fd, VIDIOC_STREAMON, &type);
+    if (ret < 0) {
+        printf("VIDIOC_STREAMON failed (%d)\n", ret);
+        return;
+    }
+        
+    ret = ioctl(dev->fd, VIDIOC_DQBUF, &RDA_buf);  
+    if (ret < 0) {
+        printf("VIDIOC_DQBUF failed (%d)\n", ret);
+        return;
+    }
+       
+    dev->buffers->YUV_buffer =
+                (unsigned char *)(unsigned long)dev->buffers->Raw_buffers[0].start; 
+    OrangePi_Store_YUYV(dev, "./TMP.yuv"); 
+
+    dev->buffers->newBuf = calloc((unsigned int)(dev->buffers->current_length * 3 / 2), 
+                        sizeof(unsigned char));
+    if (!dev->buffers->newBuf) {
+        printf("Cann't assign the memory!\n");
+        return;    
+    }
+
+    OrangePi_YUYV2RGB(dev);
+    OrangePi_Move_Noise(dev);
+    OrangePi_Store_BMP(dev, "./D.bmp");
+
+    ret = ioctl(dev->fd, VIDIOC_QBUF, &RDA_buf);
+    if (ret < 0) {
+        printf("VIDIOC_QBUF failed (%d)\n", ret);
+        return;
+    }
+}
+
 /*
  * Initialize the OrangePi device.
  */
@@ -567,50 +614,7 @@ static int OrangePi_init(struct OrangePi_v4l2_device *dev)
         OrangePi_Set_Buffer(dev);
         OrangePi_Prepare_Capture(dev);
     } else if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0) {
-        enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        struct v4l2_buffer buf;
-        int ret;
-
-        OrangePi_RDA_Open_Device(dev);
-        OrangePi_RDA_Get_Capabilities(dev);
-        OrangePi_RDA_Get_Format(dev);
-        OrangePi_RDA_Set_Format(dev);
-        OrangePi_RDA_Request_Buf(dev);
-        OrangePi_RDA_Query_Map_Qbuf(dev);   
-
-        memset(&buf , 0 , sizeof(struct v4l2_buffer));
-        buf.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        buf.memory = V4L2_MEMORY_MMAP;
-
-        ret = ioctl(dev->fd, VIDIOC_STREAMON, &type);
-        if (ret < 0) {
-            printf("VIDIOC_STREAMON failed (%d)\n", ret);
-            return ret;
-        }
-        
-        ret = ioctl(dev->fd, VIDIOC_DQBUF, &buf);  
-        if (ret < 0) {
-            printf("VIDIOC_DQBUF failed (%d)\n", ret);
-            return ret;
-        }
-       
-        dev->buffers->YUV_buffer =
-                   (unsigned char *)(unsigned long)dev->buffers->Raw_buffers[0].start; 
-        //OrangePi_Store_YUYV(dev, "./TMP.yuv"); 
-
-        dev->buffers->newBuf = calloc((unsigned int)(dev->buffers->current_length * 3 / 2), 
-                        sizeof(unsigned char));
-        if (!dev->buffers->newBuf) {
-            printf("Cann't assign the memory!\n");
-            return -1;    
-        }
-
-        ret = ioctl(dev->fd, VIDIOC_QBUF, &buf);
-        if (ret < 0) {
-            printf("VIDIOC_QBUF failed (%d)\n", ret);
-            return ret;
-        }
-
+        OrangePi_RDA_init(dev);
     }
     return 0;
 }

@@ -45,10 +45,7 @@ void OrangePi_JPEG(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
 void OrangePi_BMP(struct OrangePi_v4l2_device *dev, const char *BMP_PATH)
 {
     if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0) {
-        printf("DDDDDDDDDDDDDDDDDDd\n");
-        OrangePi_YUYV2RGB(dev);     
-        OrangePi_Move_Noise(dev);
-        OrangePi_Store_BMP(dev, BMP_PATH);
+        /* Empty operation */
     } else {
         FILE *fd;
 
