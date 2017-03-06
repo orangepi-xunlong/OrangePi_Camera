@@ -27,7 +27,12 @@ struct v4l2_requestbuffers RDA_reqbuf;
  */
 static int OrangePi_open(struct OrangePi_v4l2_device *dev)
 {
-    int fd = open(dev->device_name, O_RDWR | O_NONBLOCK,0);
+    int fd;
+    
+    if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0) 
+        fd = open(dev->device_name, O_RDWR, 0);  
+    else
+        fd = open(dev->device_name, O_RDWR | O_NONBLOCK,0);
     
     if(fd < 0) {
     	DEBUG_ERROR("ERROR: Fail to open the video0 device\n");
@@ -39,15 +44,6 @@ static int OrangePi_open(struct OrangePi_v4l2_device *dev)
     return 0;
 }
 
-static int OrangePi_RDA_Open_Device(struct OrangePi_v4l2_device *dev)
-{
-    dev->fd = open(dev->device_name, O_RDWR, 0);  
-    if (dev->fd < 0) {
-        printf("Open %s failed\n", dev->device_name);
-        return -1;
-    }
-    return 0;
-}
 /*
  * Close the device.
  */
@@ -116,28 +112,6 @@ static int OrangePi_Camera_Capabilities(struct OrangePi_v4l2_device *dev)
     return 0;
 }
 
-static void OrangePi_RDA_Get_Capabilities(struct OrangePi_v4l2_device *dev)
-{
-    struct v4l2_capability cap;
-    int ret = ioctl(dev->fd, VIDIOC_QUERYCAP, &cap);
-    if (ret < 0) {
-        printf("VIDIOC_QUERYCAP failed (%d)\n", ret);
-        return;
-    }
-        
-    // Print capability infomations  
-    printf("------------VIDIOC_QUERYCAP-----------\n");
-    printf("Capability Informations:\n");
-    printf(" driver: %s\n", cap.driver);
-    printf(" card: %s\n", cap.card);
-    printf(" bus_info: %s\n", cap.bus_info);
-    printf(" version: %08X\n", cap.version);
-    printf(" capabilities: %08X\n\n", cap.capabilities);
-    
-    return;
-}
-
-
 static void OrangePi_Current_Framer(struct OrangePi_v4l2_device *dev)
 {
     struct v4l2_format fmt;
@@ -203,17 +177,21 @@ static int OrangePi_Set_input(struct OrangePi_v4l2_device *dev)
     struct v4l2_input input;
     int count = 0;
 
-    DEBUG_ORANGEPI("OrangePi_Set_input\n");
-    memset(&input,0,sizeof(struct v4l2_input));
-    input.index = count;
+    if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0) {
+        /* Empty operation */    
+    } else {
+        DEBUG_ORANGEPI("OrangePi_Set_input\n");
+        memset(&input,0,sizeof(struct v4l2_input));
+        input.index = count;
     
-    while(!ioctl(dev->fd, VIDIOC_ENUMINPUT , &input))
-    	input.index = ++count;
-    count -= 1;
+        while(!ioctl(dev->fd, VIDIOC_ENUMINPUT , &input))
+    	    input.index = ++count;
+        count -= 1;
 
-    if(ioctl(dev->fd , VIDIOC_S_INPUT , &count) == -1) {
-	    DEBUG_ERROR("ERROR:Selecting input %d\n",count);
-	    return -1;
+        if(ioctl(dev->fd , VIDIOC_S_INPUT , &count) == -1) {
+	        DEBUG_ERROR("ERROR:Selecting input %d\n",count);
+	        return -1;
+        }
     }
     return 0;
 }
@@ -279,45 +257,6 @@ static int OrangePi_Set_Params(struct OrangePi_v4l2_device *dev)
 
     return 0;
 }
-
-static int OrangePi_RDA_Set_Format(struct OrangePi_v4l2_device *dev)  
-{  
-    int ret;
-    char fmtstr[8];  
-
-    RDA_fmt.type                = V4L2_BUF_TYPE_VIDEO_CAPTURE;  
-    RDA_fmt.fmt.pix.width       = dev->width;  
-    RDA_fmt.fmt.pix.height      = dev->height;  
-    RDA_fmt.fmt.pix.pixelformat = dev->format; //V4L2_PIX_FMT_YUYV;  
-    RDA_fmt.fmt.pix.field       = V4L2_FIELD_INTERLACED;  
-
-    ret = ioctl(dev->fd, VIDIOC_S_FMT, &RDA_fmt);  
-    if (ret < 0) {  
-        printf("VIDIOC_S_FMT failed (%d)\n", ret);  
-        return 0;  
-    }  
-      
-    // Print Stream Format  
-    printf("------------VIDIOC_S_FMT---------------\n");  
-    printf("Stream Format Informations:\n");  
-    printf(" type: %d\n", RDA_fmt.type);  
-    printf(" width: %d\n", RDA_fmt.fmt.pix.width);  
-    printf(" height: %d\n", RDA_fmt.fmt.pix.height);  
-      
-    memset(fmtstr, 0, 8);  
-    memcpy(fmtstr, &RDA_fmt.fmt.pix.pixelformat, 4);  
-    printf(" pixelformat: %s\n", fmtstr);  
-    printf(" field: %d\n", RDA_fmt.fmt.pix.field);  
-    printf(" bytesperline: %d\n", RDA_fmt.fmt.pix.bytesperline);  
-    printf(" sizeimage: %d\n", RDA_fmt.fmt.pix.sizeimage);  
-    printf(" colorspace: %d\n", RDA_fmt.fmt.pix.colorspace);  
-    printf(" priv: %d\n", RDA_fmt.fmt.pix.priv);  
-    printf(" raw_date: %s\n", RDA_fmt.fmt.raw_data);  
-        
-    return 0;  
-}  
-
-
 
 /*
  * Set Camera frame rate.
@@ -449,7 +388,6 @@ static void OrangePi_RDA_Query_Map_Qbuf(struct OrangePi_v4l2_device *dev)
                     i, (unsigned int)(unsigned long)dev->buffers->Raw_buffers[i].start, 
                     (int)(unsigned long)dev->buffers->Raw_buffers[i].length);  
     } 
-        dev->buffers->current_length = RDA_buf.length;
         
     return;  
 }  
@@ -541,12 +479,6 @@ static void OrangePi_RDA_init(struct OrangePi_v4l2_device *dev)
     int i, ret;
     enum v4l2_buf_type type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
-    OrangePi_RDA_Open_Device(dev);
-    OrangePi_RDA_Get_Capabilities(dev);
-    memset(&RDA_fmtdesc,0,sizeof(RDA_fmtdesc));
-    OrangePi_RDA_Get_Format(dev);
-    memset(&RDA_fmt, 0, sizeof(RDA_fmt));
-    OrangePi_RDA_Set_Format(dev);
     OrangePi_RDA_Request_Buf(dev);
     OrangePi_RDA_Query_Map_Qbuf(dev);   
 
@@ -601,21 +533,14 @@ static int OrangePi_init(struct OrangePi_v4l2_device *dev)
 		    sizeof(struct OrangePi_buffer));
     
     dev->buffers->n_buffers = OrangePi_Get_Buffer_Number();
-
-    if ((strcmp(OrangePi_Get_Platform(), "OrangePi_H5") == 0) |
-        (strcmp(OrangePi_Get_Platform(), "OrangePi_H3") == 0) |
-        (strcmp(OrangePi_Get_Platform(), "OrangePi_H2") == 0)) {
-        OrangePi_open(dev);
-        OrangePi_Camera_Capabilities(dev);
-        OrangePi_Set_input(dev);
-        OrangePi_Set_Params(dev);
-    //  OrangePi_Set_Frame_Rate(dev);
-        OrangePi_Current_Framer(dev);
-        OrangePi_Set_Buffer(dev);
-        OrangePi_Prepare_Capture(dev);
-    } else if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0) {
-        OrangePi_RDA_init(dev);
-    }
+    
+    OrangePi_open(dev);
+    OrangePi_Camera_Capabilities(dev);
+    OrangePi_Set_Params(dev);
+    OrangePi_Set_input(dev);
+    OrangePi_Current_Framer(dev);
+    OrangePi_Set_Buffer(dev);
+    OrangePi_Prepare_Capture(dev);
     return 0;
 }
 

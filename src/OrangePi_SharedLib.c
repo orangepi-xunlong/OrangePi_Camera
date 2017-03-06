@@ -45,7 +45,18 @@ void OrangePi_JPEG(struct OrangePi_v4l2_device *dev, const char *JPEG_PATH)
 void OrangePi_BMP(struct OrangePi_v4l2_device *dev, const char *BMP_PATH)
 {
     if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0) {
-        /* Empty operation */
+        dev->drv->capture(dev);
+        dev->buffers->newBuf = calloc((unsigned int)(dev->buffers->current_length * 3 / 2),
+                                sizeof(unsigned char));
+        
+        if (!dev->buffers->newBuf) {
+            printf("Cann't assign the memory!\n");
+            return;
+        }
+        OrangePi_YUYV2RGB(dev);
+        OrangePi_Move_Noise(dev);
+        OrangePi_Store_BMP(dev, BMP_PATH);
+
     } else {
         FILE *fd;
 
