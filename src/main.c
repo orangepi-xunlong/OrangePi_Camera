@@ -15,8 +15,12 @@ int main(int argc, char *argv[])
     }
 
     OrangePi_V4L2_init(dev);
-//    OrangePi_Capture_One(dev, "./Before.jpg");
-    OrangePi_BMP(dev, "./Before.bmp");
+    if (strcmp(OrangePi_Get_Platform(), "OrangePi_RDA") == 0)
+        /* Output BMP */
+        OrangePi_BMP(dev, "./Before.bmp");
+    else
+        /* Output JPEG */
+        OrangePi_Capture_One(dev, "./Before.jpg");
     OrangePi_V4L2_exit(dev);
 
     /* free resource */

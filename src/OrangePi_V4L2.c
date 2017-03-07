@@ -59,7 +59,6 @@ unmap:
     }
 
     free(dev->buffers->Raw_buffers);
-    free(dev->buffers->newBuf);
     free(dev->buffers);
     close(dev->fd);
     DEBUG_ORANGEPI("Close OrangePi Camera!\n");
