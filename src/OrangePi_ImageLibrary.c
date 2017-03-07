@@ -517,7 +517,7 @@ void OrangePi_Move_Noise(struct OrangePi_v4l2_device *dev)
     return;  
 }  
 
-void OrangePi_yuyv2RGB1(struct OrangePi_v4l2_device *dev)  
+void OrangePi_YUYV2RGB1(struct OrangePi_v4l2_device *dev)  
 {  
     unsigned char YUYV[3],RGB[3];    
     int j,k,i;     

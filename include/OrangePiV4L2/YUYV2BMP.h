@@ -88,5 +88,6 @@ void OrangePi_Store_BMP(struct OrangePi_v4l2_device *, const char *);
 void OrangePi_Store_YUYV(struct OrangePi_v4l2_device *, const char *);
 void OrangePi_Move_Noise(struct OrangePi_v4l2_device *);
 void OrangePi_YUYV2RGB(struct OrangePi_v4l2_device *);
+void OrangePi_YUYV2RGB1(struct OrangePi_v4l2_device *);
 
 #endif

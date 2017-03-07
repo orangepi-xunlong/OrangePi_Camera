@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <OrangePiV4L2/OrangePiV4L2.h>
 #include <OrangePiV4L2/OrangePi_Config.h>
 
